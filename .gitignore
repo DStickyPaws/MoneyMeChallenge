@@ -1,7 +1,6 @@
 # Directories
-.\.vscode\
-.\RestAPIServer\bin\
-.\RestAPIServer\bin/Debug\
-./RestAPIServer/bin/Debug/net7.0/
-./RestAPIServer/obj/
-./RestAPIServer/obj/Debug/
+.vscode/
+Server/RestAPIServer/bin/
+Server/RestAPIServer/obj/
+Server/RestAPIServer/obj/Debug/net7.0/
+Server/RestAPIServer/obj/Debug/net7.0/
