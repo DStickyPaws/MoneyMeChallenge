@@ -2,7 +2,7 @@ using RestAPIServer.Interface;
 
 namespace RestAPIServer.Models;
 
-internal record Information : IInformation
+public record Information : IInformation
 {
     /**
         <inheritdoc />
@@ -27,7 +27,7 @@ internal record Information : IInformation
     /**
         <inheritdoc />
     */
-    public DateOnly DateOfBirth { get; private set; }
+    public string DateOfBirth { get; private set; }
     /**
         <inheritdoc />
     */
@@ -37,7 +37,15 @@ internal record Information : IInformation
     */
     public string Email { get; private set; }
 
-    public Information(decimal AmountRequired, int Term, string Title, string FirstName, string LastName, DateOnly DateOfBirth, string Mobile, string Email)
+    /** 
+        <summary>
+            The constructor of the record. 
+        </summary>
+        <remarks>
+            Made it this way to solve the possibility of null reference for the properties.
+        </remarks>
+    */
+    public Information(decimal AmountRequired, int Term, string Title, string FirstName, string LastName, string DateOfBirth, string Mobile, string Email)
     {
         this.AmountRequired = AmountRequired;
         this.Term = Term;
@@ -49,7 +57,12 @@ internal record Information : IInformation
         this.Email = Email;
     }
 
-    public static Information Create(decimal AmountRequired, int Term, string Title, string FirstName, string LastName, DateOnly DateOfBirth, string Mobile, string Email)
+    /**
+        <summary>
+            A static creation method for the 
+        </summary>        
+    */
+    public static Information Create(decimal AmountRequired, int Term, string Title, string FirstName, string LastName, string DateOfBirth, string Mobile, string Email)
     {
         return new Information(AmountRequired, Term, Title, FirstName, LastName, DateOfBirth, Mobile, Email);
     }

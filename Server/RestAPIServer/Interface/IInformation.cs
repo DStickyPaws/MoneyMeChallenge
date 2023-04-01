@@ -1,7 +1,9 @@
 namespace RestAPIServer.Interface;
 
 /** 
-
+    <summary>
+        This interface is based on the document provided my the moneyme challenge.
+    </summary>
 */
 public interface IInformation
 {
@@ -19,49 +21,61 @@ public interface IInformation
             The term of the loan.
         </summary>
         <remarks>
-            Int / Int32. The duration of the loan. Although in this case it would be ambigous since its not know if this loan is in days / montth / years.
+            int / Int32. The duration of the loan. Although in this case it would be ambigous since its not know if this loan is in days / montth / years.
         </remarks>
     */
     int Term { get; }
     /** 
         <summary>
+            The title of the person.
         </summary>
         <remarks>
+            string. This property is used in formality with regards to addressing the client. 
         </remarks>
     */
     string Title { get; }
     /** 
         <summary>
+            The first name of the client.
         </summary>
         <remarks>
+            string. This property contains the first name of the client. 
         </remarks>
     */
     string FirstName { get; }
     /** 
         <summary>
+            The last name of the client.
         </summary>
         <remarks>
+            string. This property contains the last name of the client.
         </remarks>
     */
     string LastName { get; }
     /** 
         <summary>
+            The client's date of birth.
         </summary>
         <remarks>
+            string. This property is used to containt the date of birth of the client and is also used in deriving the age of the client.
         </remarks>
     */
-    DateOnly DateOfBirth { get; }
+    string DateOfBirth { get; }
     /** 
         <summary>
+            The client's mobile number. 
         </summary>
         <remarks>
+            string. This property contains the client mobile number contact info.
         </remarks>
     */
     string Mobile { get; }
     /** 
         <summary>
+            The client's email address. 
         </summary>
         <remarks>
+            string. This property contains the client email address.
         </remarks>
     */
     string Email { get; }
