@@ -10,11 +10,10 @@ public class InformationController : ControllerBase
 {
     [HttpPost]
     [Route("AskForQuotation")]
-    public Task<IInformation> AskForQuotation([FromBody] Information Info)
+    public Task<IActionResult> AskForQuotation([FromBody] Information Info)
     {
-        return Task.FromResult((IInformation)Info);
-        // IActionResult Result;
-        // Result = Ok("Hello!");
-        // return Task.FromResult(Result);
+        IActionResult Result;
+        Result = Ok();
+        return Task.FromResult(Result);
     }
 }
