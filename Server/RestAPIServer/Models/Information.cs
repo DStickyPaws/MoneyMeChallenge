@@ -37,8 +37,20 @@ internal record Information : IInformation
     */
     public string Email { get; private set; }
 
-    public Information()
+    public Information(decimal AmountRequired, int Term, string Title, string FirstName, string LastName, DateOnly DateOfBirth, string Mobile, string Email)
     {
-        
+        this.AmountRequired = AmountRequired;
+        this.Term = Term;
+        this.Title = Title;
+        this.FirstName = FirstName;
+        this.LastName = LastName;
+        this.DateOfBirth = DateOfBirth;
+        this.Mobile = Mobile;
+        this.Email = Email;
+    }
+
+    public static Information Create(decimal AmountRequired, int Term, string Title, string FirstName, string LastName, DateOnly DateOfBirth, string Mobile, string Email)
+    {
+        return new Information(AmountRequired, Term, Title, FirstName, LastName, DateOfBirth, Mobile, Email);
     }
 }
