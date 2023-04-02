@@ -6,7 +6,7 @@ namespace RestAPIServer.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class BlacklistedMobilenumberController : Controller
+public class BlacklistedMobilenumberController : ControllerBase
 {
     private IConfiguration Configuration { get; set; }
     private BlacklistedMobileNumberEngine Engine { get; set; }
