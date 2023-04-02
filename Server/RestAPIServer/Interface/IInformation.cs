@@ -8,7 +8,13 @@ namespace RestAPIServer.Interface;
     </summary>
 */
 public interface IInformation
-{
+{   /**
+        <summary>
+        </summary>
+        <remarks>
+        </remarks>
+    */
+    int? id { get; }
     /** 
         <summary>
             The amount being loaned.
@@ -24,7 +30,7 @@ public interface IInformation
             The term of the loan.
         </summary>
         <remarks>
-            int / Int32. The duration of the loan. Although in this case it would be ambigous since its not know if this loan is in days / montth / years.
+            int / Int32. The duration of the loan. This is in months.
         </remarks>
     */
     [JsonPropertyName("Term")]
