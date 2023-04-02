@@ -7,11 +7,11 @@ public record Information : IInformation
     /**
         <inheritdoc />
     */
-    public decimal AmountRequired { get; private set; }
+    public string AmountRequired { get; private set; }
     /**
         <inheritdoc />
     */
-    public int Term { get; private set; }
+    public string Term { get; private set; }
     /**
         <inheritdoc />
     */
@@ -45,7 +45,7 @@ public record Information : IInformation
             Made it this way to solve the possibility of null reference for the properties.
         </remarks>
     */
-    public Information(decimal AmountRequired, int Term, string Title, string FirstName, string LastName, string DateOfBirth, string Mobile, string Email)
+    public Information(string AmountRequired, string Term, string Title, string FirstName, string LastName, string DateOfBirth, string Mobile, string Email)
     {
         this.AmountRequired = AmountRequired;
         this.Term = Term;
@@ -62,7 +62,7 @@ public record Information : IInformation
             A static creation method for the 
         </summary>        
     */
-    public static Information Create(decimal AmountRequired, int Term, string Title, string FirstName, string LastName, string DateOfBirth, string Mobile, string Email)
+    public static Information Create(string AmountRequired, string Term, string Title, string FirstName, string LastName, string DateOfBirth, string Mobile, string Email)
     {
         return new Information(AmountRequired, Term, Title, FirstName, LastName, DateOfBirth, Mobile, Email);
     }

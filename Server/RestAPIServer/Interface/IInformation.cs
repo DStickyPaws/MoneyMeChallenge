@@ -18,7 +18,7 @@ public interface IInformation
         </remarks>
     */
     [JsonPropertyName("AmountRequired")]
-    decimal AmountRequired { get; }
+    string AmountRequired { get; }
     /** 
         <summary>
             The term of the loan.
@@ -28,7 +28,7 @@ public interface IInformation
         </remarks>
     */
     [JsonPropertyName("Term")]
-    int Term { get; }
+    string Term { get; }
     /** 
         <summary>
             The title of the person.
