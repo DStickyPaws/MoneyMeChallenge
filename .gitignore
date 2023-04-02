@@ -1,4 +1,5 @@
 # Directories
+.vs/
 .vscode/
 Server/RestAPIServer/bin/
 Server/RestAPIServer/obj/
