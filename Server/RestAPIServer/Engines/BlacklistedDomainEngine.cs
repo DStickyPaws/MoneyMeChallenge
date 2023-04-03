@@ -50,6 +50,24 @@ public class BlacklistedDomainEngine
         return Task.FromResult(Result);
     }
 
+    public Task<bool> IsBlacklisted(IBlacklistedDomain blacklistedDomain)
+    {
+        bool Result, InitialResult;
+        IBlacklistedDomain SecondaryResult;
+
+        InitialResult = IsValid(blacklistedDomain).Result;
+
+        if (InitialResult)
+        {
+            SecondaryResult = Find(blacklistedDomain).Result;
+            if (SecondaryResult.id == null) Result = false;
+            else Result = true;
+        }
+        else Result = true;
+
+        return Task.FromResult(Result);
+    }
+
     public Task<bool> Save(IBlacklistedDomain blacklistedDomain)
     {
         bool Result, InitialResult, IsExisting;
