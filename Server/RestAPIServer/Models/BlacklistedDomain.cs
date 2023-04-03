@@ -5,7 +5,7 @@ namespace RestAPIServer.Models;
 
 public record BlacklistedDomain : IBlacklistedDomain
 {
-    public int? id { get; set; }
+    public long? id { get; set; }
 
     public string emaildomains { get; private set; }
 
@@ -15,7 +15,7 @@ public record BlacklistedDomain : IBlacklistedDomain
         this.emaildomains = emaildomains;
     }
 
-    public BlacklistedDomain(int id, string emaildomains)
+    public BlacklistedDomain(long id, string emaildomains)
     {
         this.id = id;
         this.emaildomains = emaildomains;
@@ -30,7 +30,7 @@ public record BlacklistedDomain : IBlacklistedDomain
         return Task.FromResult(Result);
     }
 
-    public static Task<IBlacklistedDomain> Create(int id, string emaildomains)
+    public static Task<IBlacklistedDomain> Create(long id, string emaildomains)
     {
         IBlacklistedDomain Result;
 

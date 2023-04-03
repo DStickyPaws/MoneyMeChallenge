@@ -205,7 +205,7 @@ internal class BlacklistedMobileNumberEngine
         }
         else Result = false;
 
-        return Task.FromResult(true);
+        return Task.FromResult(Result);
     }
 
     public Task<bool> Update(IBlacklistMobilenumber Mobilenumber)

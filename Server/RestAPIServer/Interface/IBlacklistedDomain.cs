@@ -18,7 +18,7 @@ public interface IBlacklistedDomain
         </remarks>
     */
     [JsonPropertyName("Id")]
-    public int? id { get; }
+    public long? id { get; }
     /** 
         <summary>
             

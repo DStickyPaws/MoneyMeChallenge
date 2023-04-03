@@ -10,21 +10,22 @@ namespace RestAPIServer.Controllers;
 public class BlacklistedDomainController : ControllerBase
 {
     private IConfiguration Configuration { get; set; }
-    private BlacklistedDomainEngine Engine { get; set; }
+    private BlacklistedDomainEngine Engines { get; set; }
     
     public BlacklistedDomainController(IConfiguration Configurration)
     {
         this.Configuration = Configurration;
-        Engine = new BlacklistedDomainEngine(Configuration);
+        Engines = new BlacklistedDomainEngine(Configuration);
     }
 
     [HttpGet]
-    public Task<IQueryable<IBlacklistedDomain>> GetBlacklistedDomains()
+    [Route("GetBlacklistedDomains")]
+    public Task<IEnumerable<IBlacklistedDomain>> GetBlacklistedDomains()
     {
-        List<IBlacklistedDomain> Result;
+        IEnumerable<IBlacklistedDomain> Result;
 
-        Result = new List<IBlacklistedDomain>();
+        Result = Engines.BlacklistedDomains;
 
-        return Task.FromResult((IQueryable<IBlacklistedDomain>)Result);
+        return Task.FromResult(Result);
     }
 }

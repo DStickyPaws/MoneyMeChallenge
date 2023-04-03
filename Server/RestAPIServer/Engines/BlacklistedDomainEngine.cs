@@ -18,6 +18,7 @@ public class BlacklistedDomainEngine
     {
         this.Configuration = Configuration;
         ConnectionString = GetConnectionString().Result;
+        BlacklistedDomains = GetAllBlacklistedDomains().Result;
     }
 
     private Task<string> GetConnectionString()
@@ -130,6 +131,18 @@ public class BlacklistedDomainEngine
         return Task.FromResult(Result);
     }
 
+    public Task<IEnumerable<IBlacklistedDomain>> GetAllBlacklistedDomains()
+    {
+        IEnumerable<IBlacklistedDomain> Result;
+
+        using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
+        {
+            Result = dbConnection.Query<BlacklistedDomain>($"SELECT * FROM {TableName}");
+        }
+
+        return Task.FromResult(Result);
+    }
+
     public Task<bool> Update(IBlacklistedDomain blacklistedDomain)
     {
         bool Result, InitialResult, IsExisting;
@@ -170,7 +183,7 @@ public class BlacklistedDomainEngine
     {
         bool Result, InitialResult, IsExisting;
         IBlacklistedDomain SecondaryResult;
-        int IdPlaceHolder;
+        long IdPlaceHolder;
 
         InitialResult = IsValid(blacklistedDomain).Result;
         if (InitialResult)
