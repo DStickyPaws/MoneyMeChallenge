@@ -37,42 +37,56 @@ internal class BlacklistedMobileNumberEngine
 
     public Task<bool> ValidateMobileNumber(IBlacklistMobilenumber MobileNumber)
     {
-        bool Result;
+        bool Result, InitialResult;
 
         Result = true;
 
-        foreach (char c in MobileNumber.mobilenumber) 
+        InitialResult = MobileNumber.mobilenumber.Trim().Length >= 10;
+
+        if (InitialResult)
         {
-            if (!char.IsNumber(c))
+            foreach (char c in MobileNumber.mobilenumber)
             {
-                if (c != '+') Result = false; break;
+                if (!char.IsNumber(c))
+                {
+                    if (c != '+') Result = false; break;
+                }
             }
         }
+        else Result = false;
 
         return Task.FromResult(Result);
     }
 
     public Task<bool> Save(IBlacklistMobilenumber Mobilenumber)
     {
-        bool Result, InitialResult;
+        bool Result, InitialResult, IsExisting;
+        IBlacklistMobilenumber SecondaryResult;
 
         InitialResult = ValidateMobileNumber(Mobilenumber).Result;
+        SecondaryResult = Find(Mobilenumber).Result;
+
+        IsExisting = SecondaryResult != null;        
 
         if (InitialResult)
         {
-            using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
+            if (!IsExisting)
             {
-                try
+                using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
                 {
-                    dbConnection.Query<BlacklistedMobileNumber>($"INSERT INTO {TableName} (mobilenumber) VALUES (@mobilenumber)", Mobilenumber);
-                    Result = true;
-                }
-                catch
-                {
-                    Result = false;
-                    throw;
+                    try
+                    {
+                        dbConnection.Query<BlacklistedMobileNumber>($"INSERT INTO {TableName} (mobilenumber) VALUES (@mobilenumber)", Mobilenumber);
+                        Result = true;
+                    }
+                    catch
+                    {
+                        Result = false;
+                        throw;
+                    }
                 }
             }
+            else Result = false;
         }
         else Result = false;
 
@@ -160,42 +174,71 @@ internal class BlacklistedMobileNumberEngine
 
     public Task<bool> Delete(IBlacklistMobilenumber Mobilenumber)
     {
-        bool Result;
+        bool Result, InitialResult, IsExisting;
+        IBlacklistMobilenumber SecondaryResult;
 
-        using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
+        InitialResult = ValidateMobileNumber(Mobilenumber).Result;
+
+        if (InitialResult)
         {
-            try
+            SecondaryResult = Find(Mobilenumber).Result;
+            
+            IsExisting = SecondaryResult.id != null;
+
+            if (IsExisting)
             {
-                dbConnection.Query($"DELETE FROM {TableName} WHERE mobilenumber=@mobilenumber", Mobilenumber);
-                Result = true;
+                using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
+                {
+                    try
+                    {
+                        dbConnection.Query($"DELETE FROM {TableName} WHERE mobilenumber=@mobilenumber", Mobilenumber);
+                        Result = true;
+                    }
+                    catch
+                    {
+                        Result = false;
+                        throw;
+                    }
+                }
             }
-            catch
-            {
-                Result = false;
-                throw;
-            }
+            else Result = false;
         }
+        else Result = false;
 
         return Task.FromResult(true);
     }
 
     public Task<bool> Update(IBlacklistMobilenumber Mobilenumber)
     {
-        bool Result;
+        bool Result, InitialResult, IsExisting;
+        IBlacklistMobilenumber SecondaryResult;
 
-        using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString)) 
+        InitialResult = ValidateMobileNumber(Mobilenumber).Result;
+
+        if (InitialResult)
         {
-            try
+            SecondaryResult = Find(Mobilenumber).Result;
+            IsExisting = SecondaryResult.id != null;
+
+            if (IsExisting)
             {
-                dbConnection.Query($"UPDATE {TableName} SET mobilenumber=@mobilenumber WHERE id=@id", Mobilenumber);
-                Result = true;
+                using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
+                {
+                    try
+                    {
+                        dbConnection.Query($"UPDATE {TableName} SET mobilenumber=@mobilenumber WHERE id=@id", Mobilenumber);
+                        Result = true;
+                    }
+                    catch
+                    {
+                        Result = false;
+                        throw;
+                    }
+                }
             }
-            catch
-            {
-                Result = false;
-                throw;
-            }
-        }        
+            else Result = false;
+        }
+        else Result = false;
 
         return Task.FromResult(Result);
     }

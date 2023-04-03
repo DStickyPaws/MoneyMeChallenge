@@ -1,4 +1,5 @@
 ﻿using RestAPIServer.Interface;
+using System.Text.Json.Serialization;
 
 namespace RestAPIServer.Models;
 
@@ -8,6 +9,7 @@ public record BlacklistedDomain : IBlacklistedDomain
 
     public string emaildomains { get; private set; }
 
+    [JsonConstructor]
     public BlacklistedDomain(string emaildomains)
     {
         this.emaildomains = emaildomains;
