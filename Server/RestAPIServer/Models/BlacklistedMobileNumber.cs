@@ -1,4 +1,5 @@
 ﻿using RestAPIServer.Interface;
+using System.Text.Json.Serialization;
 
 namespace RestAPIServer.Models;
 
@@ -19,6 +20,7 @@ public record BlacklistedMobileNumber : IBlacklistMobilenumber
     */
     public string mobilenumber { get; private set; }
 
+
     /** 
         <summary>
             
@@ -28,6 +30,7 @@ public record BlacklistedMobileNumber : IBlacklistMobilenumber
         <param name="mobilenumber">
         </param>
     */
+    [JsonConstructor]
     public BlacklistedMobileNumber(string mobilenumber)
     {
         this.mobilenumber = mobilenumber;
