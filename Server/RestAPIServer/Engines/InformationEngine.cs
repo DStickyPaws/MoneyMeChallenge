@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using System.Data.SQLite;
 using RestAPIServer.Interface;
 using RestAPIServer.Models;
 using System.Data;
@@ -23,7 +23,7 @@ internal class InformationEngine
         string Result;
         string? ConnectionString;
         
-        ConnectionString = configuration.GetConnectionString("");
+        ConnectionString = configuration.GetConnectionString("sqlLite");
 
         Result = ConnectionString ?? string.Empty;
 
@@ -34,7 +34,7 @@ internal class InformationEngine
     {
         IEnumerable<IInformation> Result;
 
-        using (IDbConnection dbConnection = new SqliteConnection(this.ConnectionString))
+        using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
         {
             var Informations = dbConnection.Query<Information>("select * from Information", new DynamicParameters());
             Result = Informations;
@@ -48,14 +48,14 @@ internal class InformationEngine
     {
         bool Result;
 
-        using (IDbConnection dbConnection = new SqliteConnection(this.ConnectionString))
+        using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
         {
             try
             {
                 dbConnection.Execute("INSERT into Information () VALUES ()");
                 Result = true;
             }
-            catch (Exception ex)
+            catch
             {
                 Result = false;
                 throw;

@@ -18,17 +18,12 @@ public class BlacklistedMobilenumberController : ControllerBase
     }
 
     [HttpGet]
-    [Route("BlacklistedMobilenumbers")]
-    public Task<IQueryable<IBlacklistMobilenumber>> GetAllBlacklistedMobilenumbers()
+    [Route("GetAllBlacklistedMobilenumbers")]
+    public Task<IEnumerable<IBlacklistMobilenumber>> GetAllBlacklistedMobilenumbers()
     {
-        IQueryable<IBlacklistMobilenumber> Result;
+        IEnumerable<IBlacklistMobilenumber> Result;
 
-        bool TaskResponse;
-
-        TaskResponse = Engine.GetAllBlackListedMobileNumber().Result;
-
-        if (TaskResponse) Result = Engine.BlacklistedMobilenumbers;
-        else Result = (IQueryable<IBlacklistMobilenumber>)new List<IBlacklistMobilenumber>();
+        Result = Engine.BlacklistedMobilenumbers;
 
         return Task.FromResult(Result);
     }

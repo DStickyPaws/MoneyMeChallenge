@@ -16,7 +16,7 @@ public interface IBlacklistMobilenumber
         </remarks>
     */
     [JsonPropertyName("Id")]
-    public int? id { get; }
+    public Int64? id { get; }
     /** 
         <summary>
             The mobilenumber that is blacklisted.

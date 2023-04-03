@@ -21,8 +21,10 @@ public class BlacklistedDomainController : ControllerBase
     [HttpGet]
     public Task<IQueryable<IBlacklistedDomain>> GetBlacklistedDomains()
     {
-        IQueryable<IBlacklistedDomain> Result;
+        List<IBlacklistedDomain> Result;
 
-        return Task.FromResult(Result)
+        Result = new List<IBlacklistedDomain>();
+
+        return Task.FromResult((IQueryable<IBlacklistedDomain>)Result);
     }
 }

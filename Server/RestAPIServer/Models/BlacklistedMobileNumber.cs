@@ -12,7 +12,7 @@ public record BlacklistedMobileNumber : IBlacklistMobilenumber
     /** 
         <inheritdoc />
     */
-    public int? id { get; private set; }
+    public Int64? id { get; private set; }
 
     /** 
         <inheritdoc />
@@ -33,7 +33,7 @@ public record BlacklistedMobileNumber : IBlacklistMobilenumber
         this.mobilenumber = mobilenumber;
     }
 
-    public BlacklistedMobileNumber(int id, string mobilenumber)
+    public BlacklistedMobileNumber(Int64 id, string mobilenumber)
     {
         this.id = id;
         this.mobilenumber = mobilenumber;
@@ -53,7 +53,7 @@ public record BlacklistedMobileNumber : IBlacklistMobilenumber
         return Task.FromResult((IBlacklistMobilenumber)new BlacklistedMobileNumber(mobilenumber));
     }
 
-    public static Task<IBlacklistMobilenumber> Create(int id, string mobilenumber)
+    public static Task<IBlacklistMobilenumber> Create(Int64 id, string mobilenumber)
     {
         return Task.FromResult((IBlacklistMobilenumber)new BlacklistedMobileNumber(id, mobilenumber));
     }

@@ -4,6 +4,7 @@ namespace RestAPIServer.Models;
 
 public record Information : IInformation
 {
+    public int? id { get; private set; }
     /**
         <inheritdoc />
     */

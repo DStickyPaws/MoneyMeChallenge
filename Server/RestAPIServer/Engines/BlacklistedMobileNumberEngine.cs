@@ -1,27 +1,34 @@
-﻿using RestAPIServer.Interface;
+﻿using Dapper;
+using System.Data.SQLite;
+using RestAPIServer.Interface;
 using RestAPIServer.Models;
+using System.Data;
 
 namespace RestAPIServer.Engines;
 
 internal class BlacklistedMobileNumberEngine
 {
-    private IConfiguration configuration;
-    private string ConnectionString;
-    public IQueryable<IBlacklistMobilenumber> BlacklistedMobilenumbers { get; private set; }
+    private IConfiguration configuration { get; set; }
+    private string ConnectionString { get; set; }
+    public IEnumerable<IBlacklistMobilenumber> BlacklistedMobilenumbers { get; private set; }
 
 
     public BlacklistedMobileNumberEngine(IConfiguration configuration)
     {
         this.configuration = configuration;
         ConnectionString = GetConnectionString().Result;
-        this.BlacklistedMobilenumbers = (IQueryable<IBlacklistMobilenumber>)new List<IBlacklistMobilenumber>();
+
+        BlacklistedMobilenumbers = GetAllBlackListedMobileNumber().Result;
     }
 
     private Task<string> GetConnectionString()
     {
         string Result;
+        string? ConnectionString;
 
-        Result = string.Empty;
+        ConnectionString = configuration.GetConnectionString("sqlLite");
+
+        Result = ConnectionString ?? string.Empty;
 
         return Task.FromResult(Result);
     }
@@ -44,11 +51,21 @@ internal class BlacklistedMobileNumberEngine
         return Task.FromResult(Result);
     }
 
-    public Task<bool> GetAllBlackListedMobileNumber()
+    public Task<IEnumerable<IBlacklistMobilenumber>> GetAllBlackListedMobileNumber()
     {
-        bool Result;
+        IEnumerable<IBlacklistMobilenumber> Result;
 
-        Result = true;
+        using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
+        {
+            try
+            {
+                Result = (IEnumerable<BlacklistedMobileNumber>)dbConnection.Query<BlacklistedMobileNumber>("select * from BlacklistedMobileNumbers");
+            }
+            catch
+            {
+                throw;
+            }
+        }
 
         return Task.FromResult(Result);
     }
