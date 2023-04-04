@@ -109,4 +109,26 @@ public class BlacklistedMobilenumberController : ControllerBase
 
         return Task.FromResult(Result);
     }
+
+    [HttpDelete]
+    [Route("RemoveFromBlacklistById")]
+    public Task<IActionResult> RemoveMobileNumberFromBlacklist(long id)
+    {
+        bool SecondaryResult, TertiaryResult;
+        IBlacklistMobilenumber InitialResult;
+        IActionResult Result;
+
+        InitialResult = Engine.Find(id).Result;
+        SecondaryResult = Engine.IsBlacklisted(InitialResult).Result;
+
+        if (SecondaryResult)
+        {
+            SecondaryResult = Engine.Delete(InitialResult).Result;
+            if (SecondaryResult) Result = Ok("Sucessful Deletion.");
+            else Result = StatusCode(500, "Something went wrong during deletion.");
+        }
+        else Result = StatusCode(409, "The number you have submitted to blacklist does not exist, and conflicts with the current serve state.");
+
+        return Task.FromResult(Result);
+    }
 }

@@ -66,7 +66,7 @@ internal class BlacklistedMobileNumberEngine
         InitialResult = ValidateMobileNumber(Mobilenumber).Result;
         SecondaryResult = Find(Mobilenumber).Result;
 
-        IsExisting = SecondaryResult != null;        
+        IsExisting = SecondaryResult.id != null;        
 
         if (InitialResult)
         {
