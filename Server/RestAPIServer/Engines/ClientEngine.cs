@@ -159,7 +159,7 @@ public class ClientEngine
         if (string.IsNullOrWhiteSpace(LastName)) Result = false;
         else Result = true;
 
-        return Task.FromResult(true); 
+        return Task.FromResult(Result); 
     }
 
     /**
@@ -571,10 +571,333 @@ public class ClientEngine
         return Task.FromResult(Result);
     }
 
-    public Task<bool> Delete(long Id) { return Task.FromResult(false); }
-    public Task<bool> Delete(string FirstName, string LastName) { return Task.FromResult(false); }
-    public Task<bool> Delete(string FirstName, string LastName, string DateOfBirth) { return Task.FromResult(false); }
-    public Task<bool> Delete(IClient Client) { return Task.FromResult(false); }
+    /**
+        <summary>
+            Updates a client record based on newly provided values.
+        </summary>
+        <param name="CurrentClient">IClient. The current client representative record.</param>
+        <param name="NewClient">IClient. The new client representative record</param>
+        <returns>
+            Boolean. True for successful operation ; False for unsuccessful operation
+        </returns>
+    */
+    public Task<bool> Update(IClient CurrentClient, IClient NewClient )
+    {
+        bool Result, isExisting, isValid;
 
+        isValid = IsValid(NewClient).Result;
+        if (isValid)
+        {
+            isExisting= IsExisting(CurrentClient).Result;
+            if (isExisting)
+            {
+                using (IDbConnection dbConnection = new SQLiteConnection(ConnectionString))
+                {
+                    try
+                    {
+                        dbConnection.Query($"UPDATE { TableName } SET FirstName=@FirstName, LastName=@LastName DateOfBirth=@DateOfBirth WHERE Id={CurrentClient.Id}", NewClient);
+                        Result = true;
+                    }
+                    catch
+                    {
+                        Result = false;
+                        throw;
+                    }
+                }
+            }
+            else Result = false;
+        }
+        else Result = false;
 
+        return Task.FromResult(Result);
+    }
+
+    /**
+        <summary>
+            Updates a client record based on newly provided values.
+        </summary>
+        <param name="Client">IClient. Amalgamation type parameter in which it combines new data and current data into one record.</param>
+        <returns>
+            Boolean. True for successful operation ; False for unsuccessful operation
+        </returns>
+    */
+    public Task<bool> Update(IClient Client) 
+    {
+        bool Result, isExisting, isValid;
+        IClient ClientRepresentativeRecord;
+
+        ClientRepresentativeRecord = Create(Client.FirstName, Client.LastName, Client.DateOfBirth).Result;
+
+        isValid = IsValid(ClientRepresentativeRecord).Result;
+
+        if (isValid)
+        {
+            isExisting = IsExisting(ClientRepresentativeRecord).Result;
+            if (isExisting)
+            {
+                using (IDbConnection dbConnection = new SQLiteConnection(ConnectionString))
+                {
+                    try
+                    {
+                        dbConnection.Query($"UPDATE { TableName } SET FirstName=@FirstName, LastName=@LastName DateOfBirth=@DateOfBirth WHERE Id={Client.Id}", Client);
+                        Result = true;
+                    }
+                    catch
+                    {
+                        Result = false;
+                        throw;
+                    }
+                }
+            }
+            else Result = false;
+        }
+        else Result = false;
+
+        return Task.FromResult(Result);
+    }
+
+    /**
+        <summary>
+            Updates a client record based on newly provided values.
+        </summary>
+        <param name="Id">Long. The current Id of the record.</param>
+        <param name="FirstName">String. The new FirstName value to be stored as record.</param>
+        <param name="LastName">String. The new LastName value to be stored as record.</param>
+        <param name="DateOfBirth">String. The new Date of Birth value to be stored as a record.</param>
+        <returns>
+            Boolean. True for successful operation ; False for unsuccessful operation
+        </returns>
+    */
+    public Task<bool> Update(long Id, string FirstName, string LastName, string DateOfBirth) 
+    {
+        bool Result, isExisting, isValid;
+        IClient ClientRepresentativeRecord;
+
+        ClientRepresentativeRecord = Create(FirstName, LastName, DateOfBirth).Result;
+
+        isValid = IsValid(ClientRepresentativeRecord).Result;
+        if (isValid)
+        {
+            isExisting = IsExisting(ClientRepresentativeRecord).Result;
+            if (isExisting)
+            {
+                using (IDbConnection dbConnection = new SQLiteConnection(ConnectionString))
+                {
+                    try
+                    {
+                        dbConnection.Query($"UPDATE {TableName} SET FirstName=@FirstName, LastName=@LastName DateOfBirth=@DateOfBirth WHERE Id={Id}", ClientRepresentativeRecord);
+                        Result = true;
+                    }
+                    catch
+                    {
+                        Result = false;
+                        throw;
+                    }
+                }
+            }
+            else Result = false;
+        }
+        else Result = false;
+
+        return Task.FromResult(Result);
+    }
+
+    /**
+        <summary>
+            Updates a client record based on newly provided values.
+        </summary>
+        <param name="CurrentFirstName">String. The current FirstName value that is stored as record.</param>
+        <param name="CurrentLastName">String. The current LastName value that is stored as record.</param>
+        <param name="CurrentDateOfBirth">String. The current Date of Birth value that is stored as a record.</param>
+        <param name="NewFirstName">String. The new FirstName value to be stored as record.</param>
+        <param name="NewLastName">String. The new LastName value to be stored as record.</param>
+        <param name="NewDateOfBirth">String. The new Date of Birth value to be stored as a record.</param>
+        <returns>
+            Boolean. True for successful operation ; False for unsuccessful operation
+        </returns>
+    */
+    public Task<bool> Update(string CurrentFirstName, string CurrentLastName, string CurrentDateOfBirth, string NewFirstName, string NewLastName, string NewDateOfBirth)
+    {
+        bool Result, isCurrentExisting, isNewExisting, isCurrentValid, isNewValid, isValid;
+        IClient NewClientRepresentativeRecord, CurrentClientRepresentativeRecord;
+
+        CurrentClientRepresentativeRecord = Create(CurrentFirstName, CurrentLastName, CurrentDateOfBirth).Result;
+        NewClientRepresentativeRecord  = Create(NewFirstName, NewLastName, NewDateOfBirth).Result;
+
+        isNewValid = IsValid(NewClientRepresentativeRecord).Result;
+        isCurrentValid = IsValid(CurrentClientRepresentativeRecord).Result;
+
+        isValid = isNewValid && isCurrentValid;
+
+        if (isValid)
+        {
+            isCurrentExisting = IsExisting(CurrentClientRepresentativeRecord).Result;
+            isNewExisting = IsExisting(NewClientRepresentativeRecord).Result;
+
+            if (!isNewExisting && isCurrentExisting)
+            {
+                using (IDbConnection dbConnection = new SQLiteConnection(ConnectionString))
+                {
+                    try
+                    {
+                        dbConnection.Query($"UPDATE {TableName} SET FirstName=@FirstName, LastName=@LastName DateOfBirth=@DateOfBirth WHERE Id={CurrentClientRepresentativeRecord.Id}", NewClientRepresentativeRecord);
+                        Result = true;
+                    }
+                    catch
+                    {
+                        Result = false;
+                        throw;
+                    }
+                }
+            }
+            else Result = false;
+        }
+        else Result = false;
+
+        return Task.FromResult(Result);
+    }
+
+    /**
+        <summary>
+           Deletes a client record from the storage.
+        </summary>
+        <param name="Id">Long. The Id of the record.</param>
+        <returns>
+            Boolean. True for successful operation ; False for unsuccessful operation
+        </returns>
+    */
+    public Task<bool> Delete(long Id) 
+    { 
+        bool Result, isExisting;
+
+        isExisting = IsExisting(Id).Result;
+        if (isExisting)
+        {
+            using (IDbConnection dbConnection = new SQLiteConnection(ConnectionString))
+            {
+                try
+                {
+                    dbConnection.Query($"DELETE FROM {TableName} WHERE Id=@Id", Id);
+                    Result = true;
+                }
+                catch
+                {
+                    Result = false;
+                    throw;
+                }
+            }
+        }
+        else Result = false;
+
+        return Task.FromResult(Result); 
+    }
+
+    /**
+        <summary>
+            Deletes a client record from the storage.
+        </summary>
+        <param name="FirstName">String. Client's FirstName</param>
+        <param name="LastName">String. Client's LastName</param>
+        <returns>
+            Boolean. True for successful operation ; False for unsuccessful operation
+        </returns>
+    */
+    public Task<bool> Delete(string FirstName, string LastName) 
+    {
+        bool Result, isExisting;
+
+        isExisting = IsExisting(FirstName, LastName).Result;
+        if (isExisting)
+        {
+            using (IDbConnection dbConnection = new SQLiteConnection(ConnectionString))
+            {
+                try
+                {
+                    dbConnection.Query($"DELETE FROM {TableName} WHERE FirstName=@FirstName AND LastName=@LastName", new { FirstName, LastName });
+                    Result = true;
+                }
+                catch
+                {
+                    Result = false;
+                    throw;
+                }
+            }
+        }
+        else Result = false;
+
+        return Task.FromResult(Result);
+
+    }
+
+    /**
+        <summary>
+            Deletes a client record from the storage.
+        </summary>
+        <param name="FirstName">String. Client's FirstName</param>
+        <param name="LastName">String. Client's LastName</param>
+        <param name="DateOfBirth">String. Client's Date of Birth</param>
+        <returns>
+            Boolean. True for successful operation ; False for unsuccessful operation
+        </returns>
+    */
+    public Task<bool> Delete(string FirstName, string LastName, string DateOfBirth) 
+    {
+        bool Result, isExisting;
+
+        isExisting = IsExisting(FirstName, LastName, DateOfBirth).Result;
+        if (isExisting)
+        {
+            using (IDbConnection dbConnection = new SQLiteConnection(ConnectionString))
+            {
+                try
+                {
+                    dbConnection.Query($"DELETE FROM {TableName} WHERE FirstName=@FirstName AND LastName=@LastName AND DateOfBirth=@DateOfBirth", new { FirstName, LastName, DateOfBirth });
+                    Result = true;
+                }
+                catch
+                {
+                    Result = false;
+                    throw;
+                }
+            }
+        }
+        else Result = false;
+
+        return Task.FromResult(Result); 
+    }
+
+    /**
+        <summary>
+            Deletes a client record from the storage.
+        </summary>
+        <param name="Client">IClient. A Client Representative Record.</param>
+        <returns>
+            Boolean. True for successful operation ; False for unsuccessful operation
+        </returns>
+    */
+    public Task<bool> Delete(IClient Client) 
+    {
+        bool Result, isExisting;
+
+        isExisting = IsExisting(Client).Result;
+        if (isExisting)
+        {
+            using (IDbConnection dbConnection = new SQLiteConnection(ConnectionString))
+            {
+                try
+                {
+                    dbConnection.Query($"DELETE FROM {TableName} WHERE FirstName=@FirstName AND LastName=@LastName", Client);
+                    Result = true;
+                }
+                catch
+                {
+                    Result = false;
+                    throw;
+                }
+            }
+        }
+        else Result = false;
+
+        return Task.FromResult(Result); 
+    }
 }
