@@ -114,7 +114,7 @@ public class BlacklistedMobilenumberController : ControllerBase
     [Route("RemoveFromBlacklistById")]
     public Task<IActionResult> RemoveMobileNumberFromBlacklist(long id)
     {
-        bool SecondaryResult, TertiaryResult;
+        bool SecondaryResult;
         IBlacklistMobilenumber InitialResult;
         IActionResult Result;
 

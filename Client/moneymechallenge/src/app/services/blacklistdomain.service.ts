@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IBlacklistedDomain } from '../interaces/iblacklisted-domain';
 
 const EndPoint : string = "http://localhost:5109";
 
@@ -11,16 +12,16 @@ export class BlacklistdomainService {
   constructor(private httpClient : HttpClient) { }
 
   getAllBlacklistedDomain() {    
-    return this.httpClient.get<IBlacklistedMobileNumber[]>(EndPoint + "/BlacklistedDomain/GetBlacklistedDomains");
+    return this.httpClient.get<IBlacklistedDomain[]>(EndPoint + "/BlacklistedDomain/GetBlacklistedDomains");
   }
 
-  addToBlackList(mobileNumber : IBlacklistedMobileNumber)
+  addToBlackList(domain : IBlacklistedDomain)
   {
-    return this.httpClient.post(EndPoint + "/BlacklistedMobilenumber/AddToMobilenumberBlacklist",{ "mobilenumber" : mobileNumber.mobilenumber });
+    return this.httpClient.post(EndPoint + "/BlacklistedDomain/BlacklistDomain",{ "EmailDomain" : domain.EmailDomain });
   }
 
   unBlackList(id : number)
   {
-    return this.httpClient.delete(EndPoint + "/BlacklistedMobilenumber/RemoveFromBlacklistById?id=" + id, {});
+    return this.httpClient.delete<string>(EndPoint + "/BlacklistedDomain/RemoveFromBlacklistById?Id=" + id, {});
   }
 }

@@ -37,11 +37,11 @@ public class BlacklistedDomainEngine
     {
         bool InitialResult, SecondaryResult, Result;
 
-        InitialResult = blacklistedDomain.emaildomains.Contains('.');
+        InitialResult = blacklistedDomain.emaildomain.Contains('.');
 
         if (InitialResult)
         {
-            SecondaryResult = blacklistedDomain.emaildomains.Trim().Length > 1;
+            SecondaryResult = blacklistedDomain.emaildomain.Trim().Length > 1;
             if (SecondaryResult) Result = true;
             else Result = false;
         }
@@ -76,7 +76,7 @@ public class BlacklistedDomainEngine
         InitialResult = IsValid(blacklistedDomain).Result;
         SecondaryResult = Find(blacklistedDomain).Result;
 
-        IsExisting = SecondaryResult != null;
+        IsExisting = SecondaryResult.id != null;
 
         if (InitialResult)
         {
@@ -86,7 +86,7 @@ public class BlacklistedDomainEngine
                 {
                     try
                     {
-                        dbConnection.Query($"INSERT INTO {TableName} (emaildomains) VALUES (@emailddomains)", blacklistedDomain);
+                        dbConnection.Query($"INSERT INTO {TableName} (emaildomain) VALUES (@emaildomain)", blacklistedDomain);
                         Result = true;
                     }
                     catch
@@ -112,7 +112,7 @@ public class BlacklistedDomainEngine
         {
             try
             {
-                InitialResult = dbConnection.Query<BlacklistedDomain>($"SELECT * FROM { TableName } WHERE emaildomains=@emaildomains", blacklistedDomain).SingleOrDefault();
+                InitialResult = dbConnection.Query<BlacklistedDomain>($"SELECT * FROM { TableName } WHERE emaildomain=@emaildomain", blacklistedDomain).SingleOrDefault();
             }
             catch 
             {
@@ -120,7 +120,7 @@ public class BlacklistedDomainEngine
             }
         }
 
-        if (InitialResult == null) Result = BlacklistedDomain.Create(blacklistedDomain.emaildomains).Result;
+        if (InitialResult == null) Result = BlacklistedDomain.Create(blacklistedDomain.emaildomain).Result;
         else Result = InitialResult;
 
         return Task.FromResult(Result);
@@ -180,7 +180,7 @@ public class BlacklistedDomainEngine
                 {
                     try
                     {
-                        dbConnection.Query($"UPDATE {TableName} SET emaildomains=@emaildomains WHERE id=@id", blacklistedDomain);
+                        dbConnection.Query($"UPDATE {TableName} SET emaildomain=@emaildomain WHERE id=@id", blacklistedDomain);
                         Result = true;
                     }
                     catch
@@ -219,7 +219,7 @@ public class BlacklistedDomainEngine
                     {
                         try
                         {
-                            dbConnection.Query($"DELETE FROM {TableName} WHERE emaildomains=@emaildomains", blacklistedDomain);
+                            dbConnection.Query($"DELETE FROM {TableName} WHERE emaildomain=@emaildomain", blacklistedDomain);
                             Result = true;
                         }
                         catch

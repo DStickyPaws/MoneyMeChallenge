@@ -81,4 +81,23 @@ public class BlacklistedDomainController : ControllerBase
 
         return Task.FromResult(Result);
     }
+
+    [HttpDelete]
+    [Route("RemoveFromBlacklistById")]
+    public Task<IActionResult> RemoveFromBlacklist(long Id)
+    {        
+        bool SecondaryResult, IsExisting;
+        IActionResult Result;
+        IBlacklistedDomain InitialResult;
+
+        InitialResult = Engines.Find(Id).Result;
+        IsExisting = InitialResult.id != null;
+        if (IsExisting) SecondaryResult = Engines.Delete(InitialResult).Result;
+        else SecondaryResult = false;
+
+        if (SecondaryResult) Result = Ok("Sucessful in removing the blacklist");
+        else Result = StatusCode(500, "Something went wrong when removing the blacklist");
+
+        return Task.FromResult(Result);
+    }
 }

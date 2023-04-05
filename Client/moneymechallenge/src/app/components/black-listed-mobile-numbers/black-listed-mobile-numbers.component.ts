@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { BlacklistMobilenumberServiceService } from 'src/app/services/blacklist-mobilenumber-service.service';
 import { IBlacklistedMobileNumber } from 'src/app/interaces/iblacklisted-mobile-number';
@@ -21,7 +21,7 @@ export class BlackListedMobileNumbersComponent implements OnInit {
 
     constructor(private engine : BlacklistMobilenumberServiceService, private snackBar : MatSnackBar){}
     
-    ngOnInit(){
+    ngOnInit() : void {
 
       this.getData();
       this.displayedColumns = ['Id','MobileNumber', 'Actions'];

@@ -27,6 +27,6 @@ public interface IBlacklistedDomain
             
         </remarks>
     */
-    [JsonPropertyName("EmailDomains")]
-    public string emaildomains { get; }
+    [JsonPropertyName("EmailDomain")]
+    public string emaildomain { get; }
 }
