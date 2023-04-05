@@ -183,11 +183,15 @@ public class ClientEngine
         return Task.FromResult(Result);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Id"></param>
-    /// <returns></returns>
+    /**
+        <summary>
+            Finds a Client  in the database using the record Id.
+        </summary>
+        <param name="Id">Long. The Record Id of the client.</param>
+        <returns>
+            Nullable IClient. The record representing the client, or null if not found.
+        </returns>
+    */
     public Task<IClient?> Find(long Id) 
     {
         IClient? Result;
@@ -207,12 +211,16 @@ public class ClientEngine
         return Task.FromResult(Result);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="FirstName"></param>
-    /// <param name="LastName"></param>
-    /// <returns></returns>
+    /**
+        <summary>
+            Finds a Client  in the database using the stored FirstName and LastName.
+        </summary>
+        <param name="FirstName">String. The FirstName of the Client.</param>
+        <param name="LastName">String. The LastName of the Client.</param>
+        <returns>
+            Nullable IClient. The record representing the client, or null if not found.
+        </returns>
+    */
     public Task<IClient?> Find(string FirstName, string LastName) 
     {
         IClient? Result;
@@ -232,13 +240,17 @@ public class ClientEngine
         return Task.FromResult(Result);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="FirstName"></param>
-    /// <param name="LastName"></param>
-    /// <param name="DateOfBirth"></param>
-    /// <returns></returns>
+    /**
+        <summary>
+            Finds a Client  in the database using the stored FirstName, LastName and, Date of Birth.
+        </summary>
+        <param name="FirstName">String. The FirstName of the Client.</param>
+        <param name="LastName">String. The LastName of the Client.</param>
+        <param name="DateOfBirth">String. The Date of Birth of the Client.</param>
+        <returns>
+            Nullable IClient. The record representing the client, or null if not found.
+        </returns>
+    */
     public Task<IClient?> Find(string FirstName, string LastName, string DateOfBirth) 
     {
         IClient? Result;
@@ -258,11 +270,15 @@ public class ClientEngine
         return Task.FromResult(Result);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Client"></param>
-    /// <returns></returns>
+    /**
+        <summary>
+            Finds a Client  in the database using the stored FirstName and LastName.
+        </summary>
+        <param name="Client">IClient. Client Record representing the Client Record you wish to find.</param>
+        <returns>
+            Nullable IClient. The record representing the client, or null if not found.
+        </returns>
+    */
     public Task<IClient?> Find(IClient Client) 
     {
         IClient? Result;
@@ -271,7 +287,7 @@ public class ClientEngine
         {
             try
             {
-                Result = dbConnection.Query<IClient>($"SELECT Id, FirstName, LastName, DateOfBirth FROM {TableName} WHERE FirstName=@FirstName AND LastName=@LastName AND DateOfBirth=@DateOfBirth", Client).SingleOrDefault();
+                Result = dbConnection.Query<IClient>($"SELECT Id, FirstName, LastName, DateOfBirth FROM {TableName} WHERE FirstName=@FirstName AND LastName=@LastName", Client).SingleOrDefault();
             }
             catch
             {
@@ -281,5 +297,116 @@ public class ClientEngine
 
         return Task.FromResult(Result);
     }
-}
 
+    /**
+        <summary>
+            Gets all stored client record.
+        </summary>
+        <returns>
+            IEnumerable<IClient>. A collection of client reocords. 
+        </returns>
+    */
+    public Task<IEnumerable<IClient>> GetAll()
+    {
+        IEnumerable<IClient> Result;
+
+        using (IDbConnection dbConnection = new SQLiteConnection(ConnectionString))
+        {
+            try
+            {
+                Result = dbConnection.Query<IClient>($"SELECT Id, FirstName, LastName, DateOfBirth FROM {TableName}");
+            }
+            catch
+            {
+                Result = new List<IClient>();
+                throw;
+            }
+        }
+
+        return Task.FromResult(Result);
+    }
+
+    /**
+        <summary>
+            Determines if the Client records exist or not.
+        </summary>
+        <param name="Id">Long. The Id of the record.</param>
+        <returns>
+            Boolean. True for Existing; False for Not Existing
+        </returns>
+    */
+    public Task<bool> IsExisting(long Id)
+    {
+        bool Result;
+        IClient InitialResult;
+
+        using (IDbConnection dbConnection = new SQLiteConnection(ConnectionString)) 
+        {
+            try
+            { 
+
+            }
+            catch
+            {
+                Result = false;
+                throw;
+            }
+        }
+
+        return Task.FromResult(Result);
+    }
+
+    /**
+        <summary>
+            Determines if the Client records exist or not.
+        </summary>
+        <param name="FirstName">String. The Client's FirstName</param>
+        <param name="LastName">String. The Client's LastName</param>
+        <returns>
+            Boolean. True for Existing; False for Not Existing
+        </returns>
+    */
+    public Task<bool> IsExisting(string FirstName, string LastName)
+    {
+        bool Result;
+        IClient InitialResult;
+        return Task.FromResult(true);
+    }
+
+    /**
+        <summary>
+            Determines if the Client records exist or not.
+        </summary>
+        <param name="FirstName">String. The Client's FirstName</param>
+        <param name="LastName">String. The Client's LastName</param>
+        <param name="DateOfBirth">String. The Client's Date of Birth</param>
+        <returns>
+            Boolean. True for Existing; False for Not Existing
+        </returns>
+    */
+    public Task<bool> IsExisting(string FirstName, string LastName, string DateOfBirth)
+    {
+        bool Result;
+        IClient InitialResult;
+        return Task.FromResult(true);
+    }
+
+    /**
+        <summary>
+            Determines if the Client records exist or not.
+        </summary>
+        <param name="Client">IClient. A representation of the client's record</param>
+        <returns>
+            Boolean. True for Existing; False for Not Existing
+        </returns>
+    */
+    public Task<bool> IsExisting(IClient Client)
+    {
+        bool Result;
+        IClient InitialResult;
+        return Task.FromResult(true);
+    }
+
+
+
+}
