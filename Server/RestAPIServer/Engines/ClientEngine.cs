@@ -183,6 +183,11 @@ public class ClientEngine
         return Task.FromResult(Result);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="Id"></param>
+    /// <returns></returns>
     public Task<IClient?> Find(long Id) 
     {
         IClient? Result;
@@ -202,6 +207,12 @@ public class ClientEngine
         return Task.FromResult(Result);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="FirstName"></param>
+    /// <param name="LastName"></param>
+    /// <returns></returns>
     public Task<IClient?> Find(string FirstName, string LastName) 
     {
         IClient? Result;
@@ -221,6 +232,13 @@ public class ClientEngine
         return Task.FromResult(Result);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="FirstName"></param>
+    /// <param name="LastName"></param>
+    /// <param name="DateOfBirth"></param>
+    /// <returns></returns>
     public Task<IClient?> Find(string FirstName, string LastName, string DateOfBirth) 
     {
         IClient? Result;
@@ -240,6 +258,11 @@ public class ClientEngine
         return Task.FromResult(Result);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="Client"></param>
+    /// <returns></returns>
     public Task<IClient?> Find(IClient Client) 
     {
         IClient? Result;
