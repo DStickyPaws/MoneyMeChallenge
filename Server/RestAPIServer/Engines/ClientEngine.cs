@@ -6,19 +6,40 @@ using System.Data.SQLite;
 
 namespace RestAPIServer.Engines;
 
+/// <summary>
+/// 
+/// </summary>
 public class ClientEngine
 {
+    /// <summary>
+    /// 
+    /// </summary>
     private IConfiguration Configuration { get; set; }
+    /// <summary>
+    /// 
+    /// </summary>
     private string ConnectionString { get; set; }
-    
+    /// <summary>
+    /// 
+    /// </summary>
     private const string TableName = "Clients";
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="Configuration"></param>
     public ClientEngine(IConfiguration Configuration)
     {
         this.Configuration = Configuration;
         ConnectionString = GetConnectionString().Result;
     }
 
+    /**
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    */
     private Task<string> GetConnectionString()
     {                
         string? ConnectionString;
@@ -338,13 +359,15 @@ public class ClientEngine
     public Task<bool> IsExisting(long Id)
     {
         bool Result;
-        IClient InitialResult;
+        IClient? InitialResult;
 
         using (IDbConnection dbConnection = new SQLiteConnection(ConnectionString)) 
         {
             try
             { 
-
+                InitialResult = dbConnection.Query<IClient>($"SELECT Id, FirstName, LastName, DateOfBirth FROM {TableName} WHERE Id=@Id", Id).SingleOrDefault();
+                if (InitialResult == null) Result = false;
+                else Result = true;
             }
             catch
             {
@@ -369,8 +392,26 @@ public class ClientEngine
     public Task<bool> IsExisting(string FirstName, string LastName)
     {
         bool Result;
-        IClient InitialResult;
-        return Task.FromResult(true);
+        IClient? InitialResult;
+
+        using (IDbConnection dbConnection = new SQLiteConnection(ConnectionString))
+        {
+            try
+            {
+                InitialResult = dbConnection.Query<IClient>($"SELECT Id, FirstName, LastName, DateOfBirth FROM {TableName} WHERE FirstName=@FirstName AND LastName=@LastName", new { FirstName, LastName }).SingleOrDefault();
+
+                if (InitialResult == null) Result = false;
+                else Result = true;
+
+            }
+            catch 
+            {
+                Result = false;
+                throw;
+            }
+        }
+
+        return Task.FromResult(Result);
     }
 
     /**
@@ -387,8 +428,26 @@ public class ClientEngine
     public Task<bool> IsExisting(string FirstName, string LastName, string DateOfBirth)
     {
         bool Result;
-        IClient InitialResult;
-        return Task.FromResult(true);
+        IClient? InitialResult;
+
+        using (IDbConnection dbConnection = new SQLiteConnection(ConnectionString))
+        {
+            try
+            {
+                InitialResult = dbConnection.Query<IClient>($"SELECT Id, FirstName, LastName, DateOfBirth FROM {TableName} WHERE FirstName=@FirstName AND LastName=@LastName AND DateOfBirth=@DateOfBirth", new { FirstName, LastName, DateOfBirth }).SingleOrDefault();
+
+                if (InitialResult == null) Result = false;
+                else Result = true;
+
+            }
+            catch
+            {
+                Result = false;
+                throw;
+            }
+        }
+
+        return Task.FromResult(Result);
     }
 
     /**
@@ -403,10 +462,119 @@ public class ClientEngine
     public Task<bool> IsExisting(IClient Client)
     {
         bool Result;
-        IClient InitialResult;
-        return Task.FromResult(true);
+        IClient? InitialResult;
+
+        using (IDbConnection dbConnection = new SQLiteConnection(ConnectionString))
+        {
+            try
+            {
+                InitialResult = dbConnection.Query<IClient>($"SELECT Id, FirstName, LastName, DateOfBirth FROM {TableName} WHERE FirstName=@FirstName AND LastName=@LastName", Client).SingleOrDefault();
+
+                if (InitialResult == null) Result = false;
+                else Result = true;
+
+            }
+            catch
+            {
+                Result = false;
+                throw;
+            }
+        }
+
+        return Task.FromResult(Result);
     }
 
+    /**
+        <summary>
+            Save the client information as a database record.
+        </summary>
+        <param name="Client">IClient. A Client Representative Record.</param>
+        <returns>
+            Boolean. True for successful operation ; False for unsuccessful operation
+        </returns>
+    */
+    public Task<bool> Save(IClient Client)
+    {        
+        bool Result, isExisting, isValid;
+
+        isValid = IsValid(Client).Result;
+
+        if (isValid)
+        {
+            isExisting = IsExisting(Client).Result;
+            if (isExisting) Result = false;
+            else
+            {
+                using (IDbConnection dbConnection = new SQLiteConnection(ConnectionString))
+                {
+                    try
+                    {
+                        dbConnection.Query($"INSERT INTO { TableName } (FirstName, LastName, DateOfBirth) VALUES (@FirstName, @LastName, @DateOfBirth) ", Client);
+                        Result = true;
+                    }
+                    catch
+                    {
+                        Result = false;
+                        throw;
+                    }
+                }
+            }
+        }
+        else Result = false;
+
+        return Task.FromResult(Result);
+    }
+
+    /**
+        <summary>
+            Save the client information as a database record.
+        </summary>
+        <param name="FirstName">String. Client's FirstName</param>
+        <param name="LastName">String. Client's LastName</param>
+        <param name="DateOfBirth">String. Client's Date of Birth</param>
+        <returns>
+            Boolean. True for successful operation ; False for unsuccessful operation
+        </returns>
+    */
+    public Task<bool> Save(string FirstName, string LastName, string DateOfBirth)
+    {
+        bool Result, isExisting, isValid;
+        IClient ClientRepresentativeRecord;
+
+        ClientRepresentativeRecord = Create(FirstName, LastName, DateOfBirth).Result;
+
+        isValid = IsValid(ClientRepresentativeRecord).Result;
+
+        if (isValid)
+        {
+            isExisting = IsExisting(ClientRepresentativeRecord).Result;
+            if (isExisting) Result = false;
+            else
+            {
+                using (IDbConnection dbConnection = new SQLiteConnection(ConnectionString))
+                {
+                    try
+                    {
+                        dbConnection.Query($"INSERT INTO {TableName} (FirstName, LastName, DateOfBirth) VALUES (@FirstName, @LastName, @DateOfBirth) ", ClientRepresentativeRecord);
+                        Result = true;
+                    }
+                    catch
+                    {
+                        Result = false;
+                        throw;
+                    }
+                }
+            }
+        }
+        else Result = false;
+
+        return Task.FromResult(Result);
+    }
+
+    public Task<bool> Delete(long Id) { return Task.FromResult(false); }
+    public Task<bool> Delete(string FirstName, string LastName) { return Task.FromResult(false); }
+    public Task<bool> Delete(string FirstName, string LastName, string DateOfBirth) { return Task.FromResult(false); }
+    public Task<bool> Delete(IClient Client) { return Task.FromResult(false); }
 
 
 }
