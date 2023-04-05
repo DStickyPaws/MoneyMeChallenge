@@ -18,7 +18,7 @@ public interface IBlacklistedDomain
         </remarks>
     */
     [JsonPropertyName("Id")]
-    public int? id { get; }
+    public long? id { get; }
     /** 
         <summary>
             
@@ -27,6 +27,6 @@ public interface IBlacklistedDomain
             
         </remarks>
     */
-    [JsonPropertyName("EmailDomains")]
-    public string emaildomains { get; }
+    [JsonPropertyName("EmailDomain")]
+    public string emaildomain { get; }
 }

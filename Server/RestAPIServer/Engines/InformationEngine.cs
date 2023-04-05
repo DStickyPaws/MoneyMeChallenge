@@ -74,4 +74,20 @@ internal class InformationEngine
 
         return Task.FromResult(Result);
     }
+
+    public static Task<decimal> PMT(decimal PresentValue, int Term, float Rate, decimal FutureValue, bool PaymentsDue)
+    {
+        decimal Result, Dividend, Divisor;
+        Dividend = 0;
+        Divisor = 0;
+
+        /**
+            Formula : 
+                PMT = P(APR/n) / (1-(1+(APR/N))^(N*T))
+        */        
+
+        Result = Dividend / Divisor;
+
+        return Task.FromResult(Result);
+    }
 }

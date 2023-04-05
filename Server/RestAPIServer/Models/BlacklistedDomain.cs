@@ -1,38 +1,42 @@
 ﻿using RestAPIServer.Interface;
+using System.Text.Json.Serialization;
 
 namespace RestAPIServer.Models;
 
 public record BlacklistedDomain : IBlacklistedDomain
 {
-    public int? id { get; set; }
+    [JsonPropertyName("Id")]
+    public long? id { get; private set; }
 
-    public string emaildomains { get; private set; }
+    [JsonPropertyName("EmailDomain")]
+    public string emaildomain { get; set; }
 
-    public BlacklistedDomain(string emaildomains)
+    [JsonConstructor]
+    public BlacklistedDomain(string emaildomain)
     {
-        this.emaildomains = emaildomains;
+        this.emaildomain = emaildomain;
     }
 
-    public BlacklistedDomain(int id, string emaildomains)
+    public BlacklistedDomain(long id, string emaildomain)
     {
         this.id = id;
-        this.emaildomains = emaildomains;
+        this.emaildomain = emaildomain;
     }
 
-    public static Task<IBlacklistedDomain> Create(string emaildomains)
+    public static Task<IBlacklistedDomain> Create(string emaildomain)
     {
         IBlacklistedDomain Result;
 
-        Result = new BlacklistedDomain(emaildomains);
+        Result = new BlacklistedDomain(emaildomain);
 
         return Task.FromResult(Result);
     }
 
-    public static Task<IBlacklistedDomain> Create(int id, string emaildomains)
+    public static Task<IBlacklistedDomain> Create(long id, string emaildomain)
     {
         IBlacklistedDomain Result;
 
-        Result = new BlacklistedDomain(id,emaildomains);
+        Result = new BlacklistedDomain(id,emaildomain);
 
         return Task.FromResult(Result);
     }
