@@ -6,14 +6,34 @@ using System.Data.SQLite;
 
 namespace RestAPIServer.Engines;
 
+/// <summary>
+/// 
+/// </summary>
 public class BlacklistedDomainEngine
 {
     private const string TableName = "BlacklistedDomains";
+    private const string Field1 = "Id";
+    private const string Field2 = "EmailDomain";
+
+    /// <summary>
+    /// 
+    /// </summary>
     private IConfiguration Configuration { get; set; }
+    
+    /// <summary>
+    /// 
+    /// </summary>
     private string ConnectionString { get; set; }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public IEnumerable<IBlacklistedDomain> BlacklistedDomains { get; set; }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="Configuration"></param>
     public BlacklistedDomainEngine(IConfiguration Configuration)
     {
         this.Configuration = Configuration;
@@ -21,6 +41,10 @@ public class BlacklistedDomainEngine
         BlacklistedDomains = GetAllBlacklistedDomains().Result;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     private Task<string> GetConnectionString()
     {
         string Result;
@@ -33,15 +57,47 @@ public class BlacklistedDomainEngine
         return Task.FromResult(Result);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="blacklistedDomain"></param>
+    /// <returns></returns>
+    public Task<IBlacklistedDomain> Create(BlacklistedDomain blacklistedDomain) 
+    {
+        IBlacklistedDomain Result;
+
+        Result = new BlacklistedDomain(blacklistedDomain.EmailDomain, blacklistedDomain.Id);
+
+        return Task.FromResult(Result);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public Task<IBlacklistedDomain> Create(string EmailDomain, long? Id = null) 
+    {
+        IBlacklistedDomain Result;
+
+        Result = new BlacklistedDomain(EmailDomain, Id);
+
+        return Task.FromResult(Result);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="blacklistedDomain"></param>
+    /// <returns></returns>
     public Task<bool> IsValid(IBlacklistedDomain blacklistedDomain)
     {
         bool InitialResult, SecondaryResult, Result;
 
-        InitialResult = blacklistedDomain.emaildomain.Contains('.');
+        InitialResult = blacklistedDomain.EmailDomain.Contains('.');
 
         if (InitialResult)
         {
-            SecondaryResult = blacklistedDomain.emaildomain.Trim().Length > 1;
+            SecondaryResult = blacklistedDomain.EmailDomain.Trim().Length > 1;
             if (SecondaryResult) Result = true;
             else Result = false;
         }
@@ -50,6 +106,11 @@ public class BlacklistedDomainEngine
         return Task.FromResult(Result);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="blacklistedDomain"></param>
+    /// <returns></returns>
     public Task<bool> IsBlacklisted(IBlacklistedDomain blacklistedDomain)
     {
         bool Result, InitialResult;
@@ -60,7 +121,7 @@ public class BlacklistedDomainEngine
         if (InitialResult)
         {
             SecondaryResult = Find(blacklistedDomain).Result;
-            if (SecondaryResult.id == null) Result = false;
+            if (SecondaryResult.Id == null) Result = false;
             else Result = true;
         }
         else Result = true;
@@ -68,6 +129,11 @@ public class BlacklistedDomainEngine
         return Task.FromResult(Result);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="blacklistedDomain"></param>
+    /// <returns></returns>
     public Task<bool> Save(IBlacklistedDomain blacklistedDomain)
     {
         bool Result, InitialResult, IsExisting;
@@ -76,7 +142,7 @@ public class BlacklistedDomainEngine
         InitialResult = IsValid(blacklistedDomain).Result;
         SecondaryResult = Find(blacklistedDomain).Result;
 
-        IsExisting = SecondaryResult.id != null;
+        IsExisting = SecondaryResult.Id != null;
 
         if (InitialResult)
         {
@@ -103,6 +169,11 @@ public class BlacklistedDomainEngine
         return Task.FromResult(Result);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="blacklistedDomain"></param>
+    /// <returns></returns>
     public Task<IBlacklistedDomain> Find(IBlacklistedDomain blacklistedDomain)
     {
         BlacklistedDomain? InitialResult;
@@ -120,12 +191,17 @@ public class BlacklistedDomainEngine
             }
         }
 
-        if (InitialResult == null) Result = BlacklistedDomain.Create(blacklistedDomain.emaildomain).Result;
+        if (InitialResult == null) Result = Create(blacklistedDomain.EmailDomain).Result;
         else Result = InitialResult;
 
         return Task.FromResult(Result);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public Task<IBlacklistedDomain> Find(long id)
     {
         BlacklistedDomain? InitialResult;
@@ -143,12 +219,16 @@ public class BlacklistedDomainEngine
             }
         }
 
-        if (InitialResult == null) Result = BlacklistedDomain.Create(string.Empty).Result;
+        if (InitialResult == null) Result = Create(string.Empty).Result;
         else Result = InitialResult;
 
         return Task.FromResult(Result);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public Task<IEnumerable<IBlacklistedDomain>> GetAllBlacklistedDomains()
     {
         IEnumerable<IBlacklistedDomain> Result;
@@ -161,6 +241,11 @@ public class BlacklistedDomainEngine
         return Task.FromResult(Result);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="blacklistedDomain"></param>
+    /// <returns></returns>
     public Task<bool> Update(IBlacklistedDomain blacklistedDomain)
     {
         bool Result, InitialResult, IsExisting;
@@ -171,7 +256,7 @@ public class BlacklistedDomainEngine
         if (InitialResult)
         {
             SecondaryResult = Find(blacklistedDomain).Result;
-            if (SecondaryResult.id == null) IsExisting = false;
+            if (SecondaryResult.Id == null) IsExisting = false;
             else IsExisting = true;
 
             if (IsExisting)
@@ -197,6 +282,11 @@ public class BlacklistedDomainEngine
         return Task.FromResult(Result);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="blacklistedDomain"></param>
+    /// <returns></returns>
     public Task<bool> Delete(IBlacklistedDomain blacklistedDomain)
     {
         bool Result, InitialResult, IsExisting;
@@ -206,12 +296,12 @@ public class BlacklistedDomainEngine
         InitialResult = IsValid(blacklistedDomain).Result;
         if (InitialResult)
         {
-            IdPlaceHolder = blacklistedDomain.id ?? 0;
+            IdPlaceHolder = blacklistedDomain.Id ?? 0;
             if (IdPlaceHolder != 0)
             {
                 SecondaryResult = Find(IdPlaceHolder).Result;
 
-                IsExisting = SecondaryResult.id != null;
+                IsExisting = SecondaryResult.Id != null;
 
                 if (IsExisting)
                 {

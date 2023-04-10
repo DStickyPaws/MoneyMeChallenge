@@ -14,13 +14,13 @@ public record BlacklistedDomain : IBlacklistedDomain
         <inheritdoc />
     */
     [JsonPropertyName("Id")]
-    public long? id { get;  set; }
+    public long? Id { get;  set; }
 
     /**
         <inheritdoc />
     */
     [JsonPropertyName("EmailDomain")]
-    public string emaildomain { get; set; }
+    public string EmailDomain { get; set; }
 
     /**
         <summary>
@@ -30,9 +30,9 @@ public record BlacklistedDomain : IBlacklistedDomain
         <param name="Id">[optional] long nullable. The Id of the supposed record.</param>
     */
     [JsonConstructor]
-    public BlacklistedDomain(string emaildomain, long? Id = null)
+    public BlacklistedDomain(string EmailDomain, long? Id = null)
     {
-        this.id = id;
-        this.emaildomain = emaildomain;
+        this.Id = Id;
+        this.EmailDomain = EmailDomain;
     }
 }
