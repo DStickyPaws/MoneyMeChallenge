@@ -4,29 +4,23 @@ namespace RestAPIServer.Interface;
 
 /** 
     <summary>
-        
+        A data record representation of a blacklisted domain.
     </summary>
 */
 public interface IBlacklistedDomain
 {
     /** 
         <summary>
-            
+            The Id representating the data record of a blacklisted domain.
         </summary>
-        <remarks>
-            
-        </remarks>
     */
     [JsonPropertyName("Id")]
-    public long? id { get; }
+    public long? Id { get; set; }
     /** 
         <summary>
-            
+            The domain that is supposed to be blacklisted.
         </summary>
-        <remarks>
-            
-        </remarks>
     */
     [JsonPropertyName("EmailDomain")]
-    public string emaildomain { get; }
+    public string EmailDomain { get; set; }
 }

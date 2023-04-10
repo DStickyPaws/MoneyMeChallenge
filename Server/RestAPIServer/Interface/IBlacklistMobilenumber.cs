@@ -3,28 +3,24 @@
 namespace RestAPIServer.Interface;
 
 /** 
- <summary>This is for the black listed mobile numbers.</summary>
+ <summary>
+    A data record representation of a blacklisted mobile number.
+</summary>
 */
 public interface IBlacklistMobilenumber
 {
     /** 
         <summary> 
-            The id of the blacklisted mobile number
+            The Id representating the data record of a blacklisted mobilenumber.
         </summary>
-        <remarks>
-            int / Int32. The blacklisted mobile number id in the database.
-        </remarks>
     */
     [JsonPropertyName("Id")]
-    public Int64? id { get; }
+    public long? Id { get; set; }
     /** 
         <summary>
-            The mobilenumber that is blacklisted.
+            The mobile number that is supposed to be blacklisted.
         </summary>
-        <remarks>
-            string. The blackllisted mobilenumber.
-        </remarks>
     */
     [JsonPropertyName("MobileNumber")]
-    public string mobilenumber { get; }
+    public string MobileNumber { get; set; }
 }
