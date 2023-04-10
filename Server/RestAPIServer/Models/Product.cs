@@ -3,6 +3,11 @@ using System.Text.Json.Serialization;
 
 namespace RestAPIServer.Models;
 
+/**
+    <summary>
+        A set of a possible data record information, representing a product.
+    </summary>
+*/
 public record Product : IProduct
 {
     /** 

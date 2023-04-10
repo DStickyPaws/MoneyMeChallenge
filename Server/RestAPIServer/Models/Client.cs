@@ -5,7 +5,7 @@ namespace RestAPIServer.Models;
 
 /**
     <summary>
-        A set of a possible data record inforemation.
+        A set of a possible data record information, representing a client.
     </summary>
 */
 public record Client : IClient

@@ -5,7 +5,7 @@ namespace RestAPIServer.Models;
 
 /** 
     <summary>
-        The business model for the IBlacklistMobilenumber.
+        A set of a possible data record information, representing a blacklisted mobile number.
     </summary>
 */
 public record BlacklistedMobileNumber : IBlacklistMobilenumber
@@ -20,44 +20,16 @@ public record BlacklistedMobileNumber : IBlacklistMobilenumber
     */
     public string mobilenumber { get; private set; }
 
-
-    /** 
+    /**
         <summary>
-            
+            The constructor of the blacklisted mobile number's possible data record.
         </summary>
-        <param name="id">
-        </param>
-        <param name="mobilenumber">
-        </param>
+        <param name="MobileNumber">string. The mobile number to be blacklisted.</param>
+        <param name="Id">[optional] long nullable. The Id of the supposed record.</param>
     */
-    [JsonConstructor]
-    public BlacklistedMobileNumber(string mobilenumber)
-    {
-        this.mobilenumber = mobilenumber;
-    }
-
-    public BlacklistedMobileNumber(Int64 id, string mobilenumber)
+    public BlacklistedMobileNumber(string mobilenumber, long? id = null)
     {
         this.id = id;
         this.mobilenumber = mobilenumber;
-    }
-
-    /** 
-        <summary>
-        
-        </summary>
-        <param name="id">
-        </param>
-        <param name="mobilenumber">
-    </param>
-    */
-    public static Task<IBlacklistMobilenumber> Create(string mobilenumber) 
-    {
-        return Task.FromResult((IBlacklistMobilenumber)new BlacklistedMobileNumber(mobilenumber));
-    }
-
-    public static Task<IBlacklistMobilenumber> Create(Int64 id, string mobilenumber)
-    {
-        return Task.FromResult((IBlacklistMobilenumber)new BlacklistedMobileNumber(id, mobilenumber));
     }
 }

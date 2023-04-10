@@ -2,42 +2,49 @@
 
 namespace RestAPIServer.Models;
 
+/**
+    <summary>
+        A set of a possible data record information, representing a qoutation.
+    </summary>    
+*/
 public class Quotation : IQuotation
 {
-    /// <summary>
-    /// 
-    /// </summary>
+    /**
+        <inheritdoc />
+    */
     public long? Id { get; set; }
-    /// <summary>
-    /// 
-    /// </summary>
+    /**
+        <inheritdoc />
+    */
     public long PersonId { get; set; }
-    /// <summary>
-    /// 
-    /// </summary>
+    /**
+        <inheritdoc />
+    */
     public decimal FinancedAmount { get; set; }
-    /// <summary>
-    /// 
-    /// </summary>
+    /**
+        <inheritdoc />
+    */
     public decimal Repayments { get; set; }
-    /// <summary>
-    /// 
-    /// </summary>
+    /**
+        <inheritdoc />
+    */
     public decimal TotalRepayment { get; set; }
-    /// <summary>
-    /// 
-    /// </summary>
+    /**
+        <inheritdoc />
+    */
     public decimal InterestAmount { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="PersonId"></param>
-    /// <param name="FinancedAmount"></param>
-    /// <param name="Repayments"></param>
-    /// <param name="TotalRepayment"></param>
-    /// <param name="InterestAmount"></param>
-    /// <param name="Id"></param>
+    /**
+        <summary>
+            The constructor of the quotation's possible data record.
+        </summary>
+        <param name="PersonId">long. The Id representating the data record of a quotation.</param>
+        <param name="FinancedAmount">decimal. The amount loaned or financed.</param>
+        <param name="Repayments">decimal. The repayment amount of the loaned or financed amount.</param>
+        <param name="TotalRepayment"> decimal. The total repayment amount.</param>
+        <param name="InterestAmount">decimal. The amount added to the total amount to pay as interest.</param>
+        <param name="Id">[optional] long nullable. The Id of the supposed record.</param>
+    */
     public Quotation(long PersonId, decimal FinancedAmount, decimal Repayments, decimal TotalRepayment, decimal InterestAmount, long? Id = null)
     {
         this.Id = Id;

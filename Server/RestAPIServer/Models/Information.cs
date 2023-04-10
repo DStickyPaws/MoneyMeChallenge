@@ -2,6 +2,11 @@ using RestAPIServer.Interface;
 
 namespace RestAPIServer.Models;
 
+/**
+    <summary>
+        A set of a possible data record information, representing a request for quotation information.
+    </summary>
+*/
 public record Information : IInformation
 {
     public int? id { get; private set; }
@@ -56,15 +61,5 @@ public record Information : IInformation
         this.DateOfBirth = DateOfBirth;
         this.Mobile = Mobile;
         this.Email = Email;
-    }
-
-    /**
-        <summary>
-            A static creation method for the 
-        </summary>        
-    */
-    public static Information Create(string AmountRequired, string Term, string Title, string FirstName, string LastName, string DateOfBirth, string Mobile, string Email)
-    {
-        return new Information(AmountRequired, Term, Title, FirstName, LastName, DateOfBirth, Mobile, Email);
     }
 }
