@@ -6,28 +6,37 @@ using System.Data.SQLite;
 
 namespace RestAPIServer.Engines;
 
-/// <summary>
-/// 
-/// </summary>
+/**
+    <summary>
+        The engine class that drive's the Client Model.
+    </summary>
+*/
 public class ClientEngine
 {
-    /// <summary>
-    /// 
-    /// </summary>
+    /**
+        <summary>
+            The application's configuration wrapped as interface.
+        </summary>
+    */
     private IConfiguration Configuration { get; set; }
-    /// <summary>
-    /// 
-    /// </summary>
+    /**
+        <summary>
+            The ConnectionString used to connect to the database.
+        </summary>
+    */
     private string ConnectionString { get; set; }
-    /// <summary>
-    /// 
-    /// </summary>
+    /**
+        <summary>
+            The name of the table associated with the Client Model.
+        </summary>
+    */
     private const string TableName = "Clients";
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Configuration"></param>
+    /**
+        <summary>
+            The Engine's constructor.
+        </summary>
+        <param name="Configuration">IConfiguration. The Application's Configuration wrapped as IConfiguration interface.</param>
+    */
     public ClientEngine(IConfiguration Configuration)
     {
         this.Configuration = Configuration;
@@ -35,10 +44,12 @@ public class ClientEngine
     }
 
     /**
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
+        <summary>
+            Obtains the connection string stored within the application's configuration file.
+        </summary>
+        <returns>
+            string. The connection string stored within the application's configuration file.
+        </returns>
     */
     private Task<string> GetConnectionString()
     {                
