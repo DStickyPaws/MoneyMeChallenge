@@ -6,62 +6,50 @@ using System.Data.SQLite;
 
 namespace RestAPIServer.Engines;
 
-/// <summary>
-/// 
-/// </summary>
+/**
+    <summary>
+        An engine responsible for driving the Blacklisted Domain Logic Model.
+    </summary>
+*/
 public class BlacklistedDomainEngine
 {
     private const string TableName = "BlacklistedDomains";
     private const string Field1 = "Id";
     private const string Field2 = "EmailDomain";
 
-    /// <summary>
-    /// 
-    /// </summary>
+    /**
+        <summary>
+            The application's configuration wrapped as interface.
+        </summary>
+    */
     private IConfiguration Configuration { get; set; }
-    
-    /// <summary>
-    /// 
-    /// </summary>
+
+    /**
+        <summary>
+            The ConnectionString used to connect to the database.
+        </summary>
+    */
     private string ConnectionString { get; set; }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public IEnumerable<IBlacklistedDomain> BlacklistedDomains { get; set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Configuration"></param>
+    /**
+        <summary>
+            The Blacklisted Domain Engine's Constructor.
+        </summary>
+        <param name="Configuration">IConnfiguration. The Application's Configuration wrapped as an IConfiguration.</param>
+    */
     public BlacklistedDomainEngine(IConfiguration Configuration)
     {
         this.Configuration = Configuration;
-        ConnectionString = GetConnectionString().Result;
-        BlacklistedDomains = GetAllBlacklistedDomains().Result;
+        ConnectionString = Utilities.GetConnectionString(this.Configuration).Result;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    private Task<string> GetConnectionString()
-    {
-        string Result;
-        string? ConnectionString;
-
-        ConnectionString = Configuration.GetConnectionString("sqlLite");
-
-        Result = ConnectionString ?? string.Empty;
-
-        return Task.FromResult(Result);
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="blacklistedDomain"></param>
-    /// <returns></returns>
+    /**
+        <summary>
+            The method that creates an IBlacklistDomain.
+        </summary>
+        <param name="blacklistedDomain">BlacklistedDomain. A blacklisted domain record model.</param>
+        <returns>IBlacklistedDomain. A data record representation of a blacklisted domain.</returns>
+    */
     public Task<IBlacklistedDomain> Create(BlacklistedDomain blacklistedDomain) 
     {
         IBlacklistedDomain Result;
@@ -71,10 +59,14 @@ public class BlacklistedDomainEngine
         return Task.FromResult(Result);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
+    /**
+        <summary>
+            The method that creates an IBlacklistDomain
+        </summary>
+        <param name="EmailDomain">string. The email domain that is possibly blacklisted.</param>
+        <param name="Id">[Optional] long nullable. The Id representating the data record of a blacklisted domain.</param>
+        <returns>IBlacklistedDomain. A data record representation of a blacklisted domain.</returns>
+    */
     public Task<IBlacklistedDomain> Create(string EmailDomain, long? Id = null) 
     {
         IBlacklistedDomain Result;
@@ -84,11 +76,13 @@ public class BlacklistedDomainEngine
         return Task.FromResult(Result);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="blacklistedDomain"></param>
-    /// <returns></returns>
+    /**
+        <summary>
+            The method that validates if an IBlacklistedDomain is valid or not.
+        </summary>
+        <param name="blacklistedDomain">IBlacklistedDomain. The IBlacklistedDomain that is being validated.</param>
+        <returns>bool. True for valid; False for invalid.</returns>
+    */
     public Task<bool> IsValid(IBlacklistedDomain blacklistedDomain)
     {
         bool InitialResult, SecondaryResult, Result;
@@ -106,11 +100,13 @@ public class BlacklistedDomainEngine
         return Task.FromResult(Result);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="blacklistedDomain"></param>
-    /// <returns></returns>
+    /**
+        <summary>
+            The method that determines if a provided IBlacklistedDomain is blacklisted  or not.
+        </summary>
+        <param name="blacklistedDomain">IBlacklistedDomain. The IBlacklistedDomain that is being checked.</param>
+        <returns>bool. True for valid; False for invalid.</returns>
+    */
     public Task<bool> IsBlacklisted(IBlacklistedDomain blacklistedDomain)
     {
         bool Result, InitialResult;
@@ -129,11 +125,13 @@ public class BlacklistedDomainEngine
         return Task.FromResult(Result);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="blacklistedDomain"></param>
-    /// <returns></returns>
+    /**
+        <summary>
+            The method that saves the IBlacklistedDomain in the database.
+        </summary>
+        <param name="blacklistedDomain">IBlacklistedDomain. The IBlacklistedDomain that is to be saved in the database.</param>
+        <returns>bool. True for success; False for fail.</returns>
+    */
     public Task<bool> Save(IBlacklistedDomain blacklistedDomain)
     {
         bool Result, InitialResult, IsExisting;
@@ -152,7 +150,7 @@ public class BlacklistedDomainEngine
                 {
                     try
                     {
-                        dbConnection.Query($"INSERT INTO {TableName} (emaildomain) VALUES (@emaildomain)", blacklistedDomain);
+                        dbConnection.Query($"INSERT INTO {TableName} ({Field2}) VALUES (@emaildomain)", blacklistedDomain);
                         Result = true;
                     }
                     catch
@@ -169,11 +167,13 @@ public class BlacklistedDomainEngine
         return Task.FromResult(Result);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="blacklistedDomain"></param>
-    /// <returns></returns>
+    /**
+        <summary>
+            The methods that searches for an IBlacklistedDomain in the database.
+        </summary>
+        <param name="blacklistedDomain">IBlacklistedDomain. The IBlacklistedDomain that is to be searched.</param>
+        <returns>IBlacklistedDomain. The IBlacklistedDomain that is searched from the database. If the Id is null then the IBlacklistedDomain is not found within the database records</returns>
+    */
     public Task<IBlacklistedDomain> Find(IBlacklistedDomain blacklistedDomain)
     {
         BlacklistedDomain? InitialResult;
@@ -183,7 +183,7 @@ public class BlacklistedDomainEngine
         {
             try
             {
-                InitialResult = dbConnection.Query<BlacklistedDomain>($"SELECT * FROM { TableName } WHERE emaildomain=@emaildomain", blacklistedDomain).SingleOrDefault();
+                InitialResult = dbConnection.Query<BlacklistedDomain>($"SELECT {Field1}, {Field2} FROM { TableName } WHERE emaildomain=@emaildomain", blacklistedDomain).SingleOrDefault();
             }
             catch 
             {
@@ -197,11 +197,13 @@ public class BlacklistedDomainEngine
         return Task.FromResult(Result);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
+    /**
+        <summary>
+            The methods that searches for an IBlacklistedDomain in the database.
+        </summary>
+        <param name="id">long. The Id of the database record that is being searched for.</param>
+        <returns>IBlacklistedDomain. The IBlacklistedDomain that is searched from the database. If the Id is null then the IBlacklistedDomain is not found within the database records</returns>
+    */
     public Task<IBlacklistedDomain> Find(long id)
     {
         BlacklistedDomain? InitialResult;
@@ -211,7 +213,7 @@ public class BlacklistedDomainEngine
         {
             try
             {
-                InitialResult = dbConnection.Query<BlacklistedDomain>($"SELECT * FROM {TableName} WHERE id=@id", id).SingleOrDefault();
+                InitialResult = dbConnection.Query<BlacklistedDomain>($"SELECT {Field1}, {Field2} FROM {TableName} WHERE id=@id", id).SingleOrDefault();
             }
             catch
             {
@@ -225,27 +227,31 @@ public class BlacklistedDomainEngine
         return Task.FromResult(Result);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
+    /**
+        <summary>
+            Obtains all the IBlacklistedDomain records from the database.
+        </summary>
+        <returns>IEnumerable<IBlacklistedDomain>. A collection of IBlacklistedDomains stored in the database.</returns>
+    */
     public Task<IEnumerable<IBlacklistedDomain>> GetAllBlacklistedDomains()
     {
         IEnumerable<IBlacklistedDomain> Result;
 
         using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
         {
-            Result = dbConnection.Query<BlacklistedDomain>($"SELECT * FROM {TableName}");
+            Result = dbConnection.Query<BlacklistedDomain>($"SELECT {Field1}, {Field2} FROM {TableName}");
         }
 
         return Task.FromResult(Result);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="blacklistedDomain"></param>
-    /// <returns></returns>
+    /**
+        <summary>
+            The method that updates the IBlacklistedDomain database record.
+        </summary>
+        <param name="blacklistedDomain">IBlacklistedDomain (Amalgamated). An amalagamated IBlacklisted domain in which the Id of the record is of the current value and the fields contains the new values.</param>
+        <returns>bool. True for success; False for fail</returns>
+    */
     public Task<bool> Update(IBlacklistedDomain blacklistedDomain)
     {
         bool Result, InitialResult, IsExisting;
@@ -282,11 +288,13 @@ public class BlacklistedDomainEngine
         return Task.FromResult(Result);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="blacklistedDomain"></param>
-    /// <returns></returns>
+    /**
+        <summary>
+            The method that deletes the IBlacklistedDomain record from the database.
+        </summary>
+        <param name="blacklistedDomain">IBlacklistedDomain. The IBlacklistedDomain that is to be deleted from the database records.</param>
+        <returns>bool. True for success; False for fail.</returns>
+    */
     public Task<bool> Delete(IBlacklistedDomain blacklistedDomain)
     {
         bool Result, InitialResult, IsExisting;

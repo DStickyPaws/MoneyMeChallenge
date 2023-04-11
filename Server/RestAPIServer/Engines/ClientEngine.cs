@@ -8,7 +8,7 @@ namespace RestAPIServer.Engines;
 
 /**
     <summary>
-        The engine class that drive's the Client Model.
+        The engine class that drive's the Client Logic Model.
     </summary>
 */
 public class ClientEngine
@@ -40,27 +40,7 @@ public class ClientEngine
     public ClientEngine(IConfiguration Configuration)
     {
         this.Configuration = Configuration;
-        ConnectionString = GetConnectionString().Result;
-    }
-
-    /**
-        <summary>
-            Obtains the connection string stored within the application's configuration file.
-        </summary>
-        <returns>
-            string. The connection string stored within the application's configuration file.
-        </returns>
-    */
-    private Task<string> GetConnectionString()
-    {                
-        string? ConnectionString;
-        string Result;
-
-        ConnectionString = Configuration.GetConnectionString("sqlLite");
-
-        Result = ConnectionString ?? string.Empty;
-
-        return Task.FromResult(Result);
+        ConnectionString = Utilities.GetConnectionString(Configuration).Result;
     }
 
     /**

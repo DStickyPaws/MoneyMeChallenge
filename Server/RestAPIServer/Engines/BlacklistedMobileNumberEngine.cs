@@ -15,24 +15,12 @@ internal class BlacklistedMobileNumberEngine
     public IEnumerable<IBlacklistMobilenumber> BlacklistedMobilenumbers { get; private set; }
 
 
-    public BlacklistedMobileNumberEngine(IConfiguration configuration)
+    public BlacklistedMobileNumberEngine(IConfiguration Configuration)
     {
-        this.configuration = configuration;
-        ConnectionString = GetConnectionString().Result;
+        this.configuration = Configuration;
+        ConnectionString = ConnectionString = Utilities.GetConnectionString(Configuration).Result;
 
         BlacklistedMobilenumbers = GetAllBlackListedMobileNumber().Result;
-    }
-
-    private Task<string> GetConnectionString()
-    {
-        string Result;
-        string? ConnectionString;
-
-        ConnectionString = configuration.GetConnectionString("sqlLite");
-
-        Result = ConnectionString ?? string.Empty;
-
-        return Task.FromResult(Result);
     }
 
     public Task<bool> ValidateMobileNumber(IBlacklistMobilenumber MobileNumber)

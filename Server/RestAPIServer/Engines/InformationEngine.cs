@@ -9,25 +9,13 @@ namespace RestAPIServer.Engines;
 
 internal class InformationEngine
 {
-    private IConfiguration configuration { get; set; }
+    private IConfiguration Configuration { get; set; }
     private string ConnectionString { get; set; }
 
-    public InformationEngine(IConfiguration iConfiguration)
+    public InformationEngine(IConfiguration Configuration)
     {
-        this.configuration = iConfiguration;
-        this.ConnectionString = GetConnectionstring().Result;
-    }
-
-    private Task<string> GetConnectionstring()
-    {
-        string Result;
-        string? ConnectionString;
-        
-        ConnectionString = configuration.GetConnectionString("sqlLite");
-
-        Result = ConnectionString ?? string.Empty;
-
-        return Task.FromResult(Result);
+        this.Configuration = Configuration;
+        ConnectionString = Utilities.GetConnectionString(this.Configuration).Result;
     }
 
     internal Task<IEnumerable<IInformation>> GetInformations()
