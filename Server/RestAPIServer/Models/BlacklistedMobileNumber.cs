@@ -8,17 +8,17 @@ namespace RestAPIServer.Models;
         A set of a possible data record information, representing a blacklisted mobile number.
     </summary>
 */
-public record BlacklistedMobileNumber : IBlacklistMobilenumber
+public record BlacklistedMobileNumber : IBlacklistMobileNumber
 {
     /** 
         <inheritdoc />
     */
-    public Int64? id { get; private set; }
+    public long? Id { get; set; }
 
     /** 
         <inheritdoc />
     */
-    public string mobilenumber { get; private set; }
+    public string MobileNumber { get; set; }
 
     /**
         <summary>
@@ -27,9 +27,9 @@ public record BlacklistedMobileNumber : IBlacklistMobilenumber
         <param name="MobileNumber">string. The mobile number to be blacklisted.</param>
         <param name="Id">[optional] long nullable. The Id of the supposed record.</param>
     */
-    public BlacklistedMobileNumber(string mobilenumber, long? id = null)
+    public BlacklistedMobileNumber(string MobileNumber, long? Id = null)
     {
-        this.id = id;
-        this.mobilenumber = mobilenumber;
+        this.Id = Id;
+        this.MobileNumber = MobileNumber;
     }
 }

@@ -110,14 +110,14 @@ public class BlacklistedDomainEngine
     public Task<bool> IsBlacklisted(IBlacklistedDomain blacklistedDomain)
     {
         bool Result, InitialResult;
-        IBlacklistedDomain SecondaryResult;
+        IBlacklistedDomain? SecondaryResult;
 
         InitialResult = IsValid(blacklistedDomain).Result;
 
         if (InitialResult)
         {
             SecondaryResult = Find(blacklistedDomain).Result;
-            if (SecondaryResult.Id == null) Result = false;
+            if (SecondaryResult == null) Result = false;
             else Result = true;
         }
         else Result = true;
@@ -172,26 +172,21 @@ public class BlacklistedDomainEngine
         <param name="blacklistedDomain">IBlacklistedDomain. The IBlacklistedDomain that is to be searched.</param>
         <returns>IBlacklistedDomain. The IBlacklistedDomain that is searched from the database. If the Id is null then the IBlacklistedDomain is not found within the database records</returns>
     */
-    public Task<IBlacklistedDomain> Find(IBlacklistedDomain blacklistedDomain)
+    public Task<IBlacklistedDomain?> Find(IBlacklistedDomain blacklistedDomain)
     {
-        BlacklistedDomain? InitialResult;
-        IBlacklistedDomain Result;            
+        IBlacklistedDomain? Result;            
 
         using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
         {
             try
             {
-                InitialResult = dbConnection.Query<BlacklistedDomain>($"SELECT {Field1}, {Field2} FROM { TableName } WHERE {Field2}=@EmailDomain", blacklistedDomain).SingleOrDefault();
+                Result = dbConnection.Query<IBlacklistedDomain>($"SELECT {Field1}, {Field2} FROM { TableName } WHERE {Field2}=@EmailDomain", blacklistedDomain).SingleOrDefault();
             }
             catch 
             {
                 throw;
             }
         }
-
-        if (InitialResult == null) Result = Create(blacklistedDomain.EmailDomain).Result;
-        else Result = InitialResult;
-
         return Task.FromResult(Result);
     }
 
@@ -202,16 +197,15 @@ public class BlacklistedDomainEngine
         <param name="Id">long. The Id of the database record that is being searched for.</param>
         <returns>IBlacklistedDomain. The IBlacklistedDomain that is searched from the database. If the Id is null then the IBlacklistedDomain is not found within the database records</returns>
     */
-    public Task<IBlacklistedDomain> Find(long Id)
+    public Task<IBlacklistedDomain?> Find(long Id)
     {
-        BlacklistedDomain? InitialResult;
-        IBlacklistedDomain Result;
+        IBlacklistedDomain? Result;
 
         using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
         {
             try
             {
-                InitialResult = dbConnection.Query<BlacklistedDomain>($"SELECT {Field1}, {Field2} FROM {TableName} WHERE {Field1}=@Id", Id).SingleOrDefault();
+                Result = dbConnection.Query<BlacklistedDomain>($"SELECT {Field1}, {Field2} FROM {TableName} WHERE {Field1}=@Id", Id).SingleOrDefault();
             }
             catch
             {
@@ -219,8 +213,31 @@ public class BlacklistedDomainEngine
             }
         }
 
-        if (InitialResult == null) Result = Create(string.Empty).Result;
-        else Result = InitialResult;
+        return Task.FromResult(Result);
+    }
+
+    /**
+        <summary>
+            The methods that searches for an IBlacklistedDomain in the database.
+        </summary>
+        <param name="EmailDomain">string. The email domain that is to be looked for.</param>
+        <returns></returns>
+    */
+    public Task<IBlacklistedDomain?> Find(string EmailDomain)
+    {
+        IBlacklistedDomain? Result;
+
+        using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
+        {
+            try
+            {
+                Result = dbConnection.Query<BlacklistedDomain>($"SELECT {Field1}, {Field2} FROM {TableName} WHERE {Field2}=@EmailDomain", EmailDomain).SingleOrDefault();
+            }
+            catch
+            {
+                throw;
+            }
+        }
 
         return Task.FromResult(Result);
     }
@@ -241,7 +258,7 @@ public class BlacklistedDomainEngine
         {
             try
             {
-                InitialResult = dbConnection.Query<IBlacklistedDomain>($"SELECT {Field1}, {Field2} FROM {TableName} WHERE {Field2}=@EmailDomain", blacklistedDomain).SingleOrDefault();                
+                InitialResult = dbConnection.Query<IBlacklistedDomain>($"SELECT {Field1}, {Field2} FROM {TableName} WHERE {Field2}=@EmailDomain AND {Field1}=@Id", blacklistedDomain).SingleOrDefault();                
             }
             catch
             {
@@ -345,16 +362,17 @@ public class BlacklistedDomainEngine
     */
     public Task<bool> Update(IBlacklistedDomain blacklistedDomain)
     {
-        bool Result, InitialResult, isExisting;
-        long RecordId = 0;
-        InitialResult = IsValid(blacklistedDomain).Result;
+        bool Result, isValid, isExisting;
+        long RecordId;        
 
-        if (blacklistedDomain.Id.HasValue) RecordId = blacklistedDomain.Id.Value;
-        else InitialResult = false;
+        isValid = IsValid(blacklistedDomain).Result;
 
-        if (InitialResult)
+        if (isValid)
         {
-            if (RecordId != 0) isExisting = IsExisting(RecordId).Result;
+            if (blacklistedDomain.Id.HasValue) RecordId = blacklistedDomain.Id.Value;
+            else RecordId = 0;
+
+            if(RecordId != 0) isExisting = IsExisting(blacklistedDomain).Result;
             else isExisting = false;
 
             if (isExisting)
@@ -363,7 +381,94 @@ public class BlacklistedDomainEngine
                 {
                     try
                     {
-                        dbConnection.Query($"UPDATE {TableName} SET emaildomain=@emaildomain WHERE {Field1}=@Id", blacklistedDomain);
+                        dbConnection.Query($"UPDATE {TableName} SET {Field2}=@EmailDomain WHERE {Field1}=@Id", blacklistedDomain);
+                        Result = true;
+                    }
+                    catch
+                    {
+                        Result = false;
+                        throw;
+                    }
+                }
+            }
+            else Result = false;
+        }
+        else Result = false;
+
+        return Task.FromResult(Result);
+    }
+
+    /**
+        <summary>
+            The method that updates the IBlacklistedDomain database record.
+        </summary>
+        <param name="newBlacklistedDomain">IBlacklistedDomain. The new values for the blacklisted domain record.</param>
+        <param name="currenrtBlacklistedDomain">IBlacklistedDomain. The current values for the blacklisted domain record.</param>
+        <returns>bool. True for success; False for fail.</returns>
+    */
+    public Task<bool> Update(IBlacklistedDomain newBlacklistedDomain, IBlacklistedDomain currenrtBlacklistedDomain)
+    {
+        bool Result, isValid, isNewValid, isCurrentValid, isExisting;
+        
+        isNewValid = IsValid(newBlacklistedDomain).Result;
+        isCurrentValid = IsValid(currenrtBlacklistedDomain).Result;
+
+        isValid = isNewValid && isCurrentValid;
+
+        if (isValid)
+        {
+            isExisting = IsExisting(currenrtBlacklistedDomain).Result;
+            if (isExisting)
+            {
+                using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
+                {
+                    try
+                    {
+                        dbConnection.Query($"UPDATE {TableName} SET {Field2}=@EmailDomain WHERE {Field1}={currenrtBlacklistedDomain.Id}", newBlacklistedDomain);
+                        Result = true;
+                    }
+                    catch
+                    {
+                        Result = false;
+                        throw;
+                    }
+                }
+            }
+            else Result = false;
+        }
+        else Result = false;
+
+        return Task.FromResult(Result);
+    }
+
+    /**
+        <summary>
+            The method that updates the IBlacklistedDomain database record.
+        </summary>
+        <param name="Id">long. The current record Id.</param>
+        <param name="newEmaildomain">string. The new EmailDomain value.</param>
+        <returns>bool. True for success; False for fail.</returns>
+    */
+    public Task<bool> Update(long Id, string newEmaildomain)
+    {
+        bool Result, isValid, isExisting;
+        IBlacklistedDomain Validator;
+
+        Validator = Create(newEmaildomain, Id).Result;
+
+        isValid = IsValid(Validator).Result;
+
+        if (isValid)
+        {
+            isExisting = IsExisting(Id).Result;
+
+            if (isExisting)
+            {
+                using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
+                {
+                    try
+                    {
+                        dbConnection.Query($"UPDATE {TableName} SET {Field2}={newEmaildomain} WHERE {Field1}=@Id");
                         Result = true;
                     }
                     catch
@@ -419,6 +524,72 @@ public class BlacklistedDomainEngine
                 }
             }
             else Result = false;
+        }
+        else Result = false;
+
+        return Task.FromResult(Result);
+    }
+
+    /**
+        <summary>
+            The method that deletes the IBlacklistedDomain record from the database.
+        </summary>
+        <param name="Id">long. The record Id to be deleted from the database records.</param>
+        <returns>bool. True for success; False for fail.</returns>
+    */
+    public Task<bool> Delete(long Id)
+    {
+        bool Result, isExisting;
+
+        isExisting = IsExisting(Id).Result;
+        if (isExisting)
+        {
+            using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
+            {
+                try
+                {
+                    dbConnection.Query($"DELETE FROM {TableName} WHERE {Field1}={Id}");
+                    Result = true;
+                }
+                catch
+                {
+                    Result = false;
+                    throw;
+                }
+            }
+        }
+        else Result = false;
+
+        return Task.FromResult(Result);
+    }
+
+    /**
+        <summary>
+            The method that deletes the IBlacklistedDomain record from the database.
+        </summary>
+        <param name="EmailDomain">string. The email domain to be deleted from the database records.</param>
+        <returns>bool. True for success; False for fail.</returns>
+    */
+    public Task<bool> Delete(string EmailDomain)
+    {
+        bool Result, isExisting;
+
+        isExisting = IsExisting(EmailDomain).Result;
+        if (isExisting)
+        {
+            using (IDbConnection dbConnection = new SQLiteConnection(this.ConnectionString))
+            {
+                try
+                {
+                    dbConnection.Query($"DELETE FROM {TableName} WHERE {Field2}={EmailDomain}");
+                    Result = true;
+                }
+                catch
+                {
+                    Result = false;
+                    throw;
+                }
+            }
         }
         else Result = false;
 

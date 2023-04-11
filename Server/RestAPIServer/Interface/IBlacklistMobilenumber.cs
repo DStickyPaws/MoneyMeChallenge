@@ -7,7 +7,7 @@ namespace RestAPIServer.Interface;
     A data record representation of a blacklisted mobile number.
 </summary>
 */
-public interface IBlacklistMobilenumber
+public interface IBlacklistMobileNumber
 {
     /** 
         <summary> 
