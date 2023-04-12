@@ -9,39 +9,39 @@ namespace RestAPIServer.Models;
 */
 public record Information : IInformation
 {
-    public int? id { get; private set; }
+    public long? Id { get; set; }
     /**
         <inheritdoc />
     */
-    public string AmountRequired { get; private set; }
+    public string AmountRequired { get; set; }
     /**
         <inheritdoc />
     */
-    public string Term { get; private set; }
+    public string Term { get; set; }
     /**
         <inheritdoc />
     */
-    public string Title { get; private set; }
+    public string Title { get; set; }
     /**
         <inheritdoc />
     */
-    public string FirstName { get; private set; }
+    public string FirstName { get; set; }
     /**
         <inheritdoc />
     */
-    public string LastName { get; private set; }
+    public string LastName { get; set; }
     /**
         <inheritdoc />
     */
-    public string DateOfBirth { get; private set; }
+    public string DateOfBirth { get; set; }
     /**
         <inheritdoc />
     */
-    public string Mobile { get; private set; }
+    public string Mobile { get; set; }
     /**
         <inheritdoc />
     */
-    public string Email { get; private set; }
+    public string Email { get; set; }
 
     /** 
         <summary>

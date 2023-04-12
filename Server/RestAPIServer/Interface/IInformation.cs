@@ -13,7 +13,7 @@ public interface IInformation
             The Id representating the data record of a quotation request information.
         </summary>
     */
-    int? id { get; set; }
+    long? Id { get; set; }
     /** 
         <summary>
             The amount being loaned.

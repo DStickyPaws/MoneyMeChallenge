@@ -390,7 +390,7 @@ internal class BlacklistedMobileNumberEngine
         <summary>
             The method that updates the database records.
         </summary>
-        <param name="blacklistMobileNumber">IBlacklistMobileNumber</param>
+        <param name="blacklistMobileNumber">IBlacklistMobileNumber. (Amalagamated) The IBlacklistMobileNumber to be updated.</param>
         <returns>bool. True for success; False for fail.</returns>
     */
     public Task<bool> Update(IBlacklistMobileNumber blacklistMobileNumber)
@@ -431,13 +431,14 @@ internal class BlacklistedMobileNumberEngine
         return Task.FromResult(Result);
     }
 
-    // ToDo : Fill this up
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="newBlacklistMobileNumber"></param>
-    /// <param name="currentBlacklistMobileNumber"></param>
-    /// <returns></returns>
+    /**
+        <summary>
+            The method that updates the database records.
+        </summary>
+        <param name="newBlacklistMobileNumber">IBlacklistMobileNumber. The new values for the IBlacklistMobileNumber stored in the database records.</param>
+        <param name="currentBlacklistMobileNumber">IBlacklistMobileNumber. The current values for the IBlacklistMobileNumber stored in the database records.</param>
+        <returns>bool. True for success; False for fail.</returns>
+    */
     public Task<bool> Update(IBlacklistMobileNumber newBlacklistMobileNumber, IBlacklistMobileNumber currentBlacklistMobileNumber)
     {
         bool Result, isValid, isNewValid, isCurrentValid, isExisting;
@@ -472,14 +473,14 @@ internal class BlacklistedMobileNumberEngine
 
         return Task.FromResult(Result);
     }
-
-    // ToDo : Fill this up
-    /// <summary>
-    ///  
-    /// </summary>
-    /// <param name="Id"></param>
-    /// <param name="MobileNumber"></param>
-    /// <returns></returns>
+    /**
+        <summary>
+            The method that updates the database records.
+        </summary>
+        <param name="Id">long. The Id of the record to be updated.</param>
+        <param name="MobileNumber">string. The new mobile number to be stored in the database records.</param>
+        <returns>bool. True for success; False for fail.</returns>
+    */
     public Task<bool> Update(long Id, string MobileNumber)
     {
         bool Result, isValid, isExisting;
@@ -516,13 +517,12 @@ internal class BlacklistedMobileNumberEngine
         return Task.FromResult(Result);
     }
 
-    // ToDo : Fill this up
     /**
         <summary>
-    
+            The method that deletes the database record.
         </summary>
-        <param name="Mobilenumber"></param>
-        <returns></returns>
+        <param name="Mobilenumber">IBlacklistMobileNumber. The data representation of the databaase record that is to be deleted.</param>
+        <returns>bool. True for success; False for fail.</returns>
     */
     public Task<bool> Delete(IBlacklistMobileNumber blacklistMobileNumber)
     {
@@ -556,12 +556,13 @@ internal class BlacklistedMobileNumberEngine
         return Task.FromResult(Result);
     }
 
-    // ToDo : Fill this up
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Id"></param>
-    /// <returns></returns>
+    /**
+        <summary>
+            The method that deletes the database record.
+        </summary>
+        <param name="Id">long. The Id of the record to be deleted.</param>
+        <returns>bool. True for success; False for fail.</returns>
+    */
     public Task<bool> Delete(long Id)
     {
         bool Result, isExisting;
@@ -589,12 +590,13 @@ internal class BlacklistedMobileNumberEngine
         return Task.FromResult(Result);
     }
 
-    // ToDo : Fill this up
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="MobileNumber"></param>
-    /// <returns></returns>
+    /**
+        <summary>
+            The method that deletes the database record.
+        </summary>
+        <param name="MobileNumber"></param>
+        <returns>bool. True for success; False for fail.</returns>
+    */
     public Task<bool> Delete(string MobileNumber)
     {
         bool Result, isExisting;
