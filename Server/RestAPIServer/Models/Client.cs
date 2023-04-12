@@ -20,6 +20,11 @@ public record Client : IClient
     /**
         <inheritdoc/>
     */
+    [JsonPropertyName("Title")]
+    public string Title {get; set;}
+    /**
+        <inheritdoc/>
+    */
     [JsonPropertyName("FirstName")]
     public string FirstName { get; set; }
 
@@ -39,15 +44,17 @@ public record Client : IClient
         <summary>
             The constructor of the client's possible data record.
         </summary>
-        <param name="FirstName">string. The client's supposed First Name</param>
-        <param name="LastName">string. The client's supposed Last Name</param>
-        <param name="DateOfBirth">string. The client's supposed Date of Birth</param>
+        <param name="Title">string. The client's requested way to be addressed.</param>
+        <param name="FirstName">string. The client's supposed First Name.</param>
+        <param name="LastName">string. The client's supposed Last Name.</param>
+        <param name="DateOfBirth">string. The client's supposed Date of Birth.</param>
         <param name="Id">[optional] long nullable. The Id of the supposed record.</param>
     */
     [JsonConstructor]
-    public Client(string FirstName, string LastName, string DateOfBirth, long? Id = null)
+    public Client(string Title, string FirstName, string LastName, string DateOfBirth, long? Id = null)
     {
         this.Id = Id;
+        this.Title = Title;
         this.FirstName = FirstName;
         this.LastName = LastName;
         this.DateOfBirth = DateOfBirth;

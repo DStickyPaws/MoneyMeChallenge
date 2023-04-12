@@ -31,6 +31,14 @@ public class ClientEngine
         </summary>
     */
     private const string TableName = "Clients";
+
+    private const string Field1 = "Id";
+    private const string Field2 = "Title";
+    private const string Field3 = "FirstName";
+    private const string Field4 = "LastName";
+    private const string Field5 = "DateOfBirth";
+
+
     /**
         <summary>
             The Engine's constructor.
@@ -56,7 +64,7 @@ public class ClientEngine
     {
         IClient Result;
 
-        Result = new Client(client.FirstName,client.LastName,client.DateOfBirth, client.Id);
+        Result = new Client(client.Title, client.FirstName,client.LastName,client.DateOfBirth, client.Id);
 
         return Task.FromResult(Result);
     }
@@ -73,11 +81,12 @@ public class ClientEngine
             IClient. Representing the Client Information.
         </returns>
     */
-    public Task<IClient> Create(string FirstName, string LastName, string DateOfBirth, long? Id = null)
+    // TODO : Title Param
+    public Task<IClient> Create(string Title,string FirstName, string LastName, string DateOfBirth, long? Id = null)
     {
         IClient Result;
 
-        Result = new Client(FirstName, LastName, DateOfBirth, Id);
+        Result = new Client(Title, FirstName, LastName, DateOfBirth, Id);
 
         return Task.FromResult(Result);
     }
@@ -100,6 +109,8 @@ public class ClientEngine
 
         return Task.FromResult(Result); 
     }
+
+    // TODO : IsValidTitle
 
     /**
         <summary>
@@ -250,8 +261,7 @@ public class ClientEngine
         }
 
         return Task.FromResult(Result);
-    }
-
+    }    
     /**
         <summary>
             Finds a Client  in the database using the stored FirstName, LastName and, Date of Birth.
@@ -263,6 +273,7 @@ public class ClientEngine
             Nullable IClient. The record representing the client, or null if not found.
         </returns>
     */
+    // TODO : Title Param
     public Task<IClient?> Find(string FirstName, string LastName, string DateOfBirth) 
     {
         IClient? Result;
@@ -527,12 +538,13 @@ public class ClientEngine
             Boolean. True for successful operation ; False for unsuccessful operation
         </returns>
     */
-    public Task<bool> Save(string FirstName, string LastName, string DateOfBirth)
+    // TODO : Title Param
+    public Task<bool> Save(string Title, string FirstName, string LastName, string DateOfBirth)
     {
         bool Result, isExisting, isValid;
         IClient ClientRepresentativeRecord;
 
-        ClientRepresentativeRecord = Create(FirstName, LastName, DateOfBirth).Result;
+        ClientRepresentativeRecord = Create(Title, FirstName, LastName, DateOfBirth).Result;
 
         isValid = IsValid(ClientRepresentativeRecord).Result;
 

@@ -16,6 +16,15 @@ public interface IClient
     */
     [JsonPropertyName("Id")]
     long? Id { get; set; }
+
+    /**
+        <summary>
+            The title that the person wished to be addressed.
+        </summary>
+    */
+    [JsonPropertyName("Title")]
+    string Title { get; set; }
+
     /**
         <summary>
             The First Name of the Client.
