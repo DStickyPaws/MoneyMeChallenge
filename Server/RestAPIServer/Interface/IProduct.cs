@@ -36,7 +36,7 @@ public interface IProduct
         </summary>
     */
     [JsonPropertyName("InterestFreeMonths")]
-    string InterestFreeMonths { get; set; }
+    long InterestFreeMonths { get; set; }
 
     /**
         <summary>
@@ -44,5 +44,5 @@ public interface IProduct
         </summary>
     */
     [JsonPropertyName("MinimumDurationMonth")]
-    string MinimumDurationMonths { get; set; }
+    long MinimumDurationMonths { get; set; }
 }

@@ -31,7 +31,15 @@ public class ProductEngine
     /// <param name="Product"></param>
     /// <returns></returns>
 
-    public Task<bool> IsValid(IProduct Product) { return Task.FromResult(true); }
+    public Task<bool> IsValid(IProduct Product) 
+    {
+        bool Result;
+
+        Result = IsValidName(Product.Name).Result ;
+
+        return Task.FromResult(Result); 
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -47,7 +55,15 @@ public class ProductEngine
     /// </summary>
     /// <param name="Name"></param>
     /// <returns></returns>
-    public Task<bool> IsValidName(string Name) { return Task.FromResult(true); }
+    public Task<bool> IsValidName(string Name) 
+    {
+        bool Result;
+
+        if (Name.Trim().Length == 0) Result = false;
+        else Result = true;
+
+        return Task.FromResult(Result); 
+    }
 
     /// <summary>
     /// 
