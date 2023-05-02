@@ -629,7 +629,7 @@ public class ClientEngine
         bool Result, isExisting, isValid;
         IClient ClientRepresentativeRecord;
 
-        ClientRepresentativeRecord = Create(Client.FirstName, Client.LastName, Client.DateOfBirth).Result;
+        ClientRepresentativeRecord = Create(Client.Title, Client.FirstName, Client.LastName, Client.DateOfBirth).Result;
 
         isValid = IsValid(ClientRepresentativeRecord).Result;
 
@@ -671,12 +671,12 @@ public class ClientEngine
             Boolean. True for successful operation ; False for unsuccessful operation
         </returns>
     */
-    public Task<bool> Update(long Id, string FirstName, string LastName, string DateOfBirth) 
+    public Task<bool> Update(long Id,string Title, string FirstName, string LastName, string DateOfBirth) 
     {
         bool Result, isExisting, isValid;
         IClient ClientRepresentativeRecord;
 
-        ClientRepresentativeRecord = Create(FirstName, LastName, DateOfBirth).Result;
+        ClientRepresentativeRecord = Create(Title, FirstName, LastName, DateOfBirth, Id).Result;
 
         isValid = IsValid(ClientRepresentativeRecord).Result;
         if (isValid)
@@ -719,13 +719,13 @@ public class ClientEngine
             Boolean. True for successful operation ; False for unsuccessful operation
         </returns>
     */
-    public Task<bool> Update(string CurrentFirstName, string CurrentLastName, string CurrentDateOfBirth, string NewFirstName, string NewLastName, string NewDateOfBirth)
+    public Task<bool> Update(string CurrentTitle, string CurrentFirstName, string CurrentLastName, string CurrentDateOfBirth, string NewTitle, string NewFirstName, string NewLastName, string NewDateOfBirth)
     {
         bool Result, isCurrentExisting, isNewExisting, isCurrentValid, isNewValid, isValid;
         IClient NewClientRepresentativeRecord, CurrentClientRepresentativeRecord;
 
-        CurrentClientRepresentativeRecord = Create(CurrentFirstName, CurrentLastName, CurrentDateOfBirth).Result;
-        NewClientRepresentativeRecord  = Create(NewFirstName, NewLastName, NewDateOfBirth).Result;
+        CurrentClientRepresentativeRecord = Create(CurrentTitle, CurrentFirstName, CurrentLastName, CurrentDateOfBirth).Result;
+        NewClientRepresentativeRecord  = Create(NewTitle, NewFirstName, NewLastName, NewDateOfBirth).Result;
 
         isNewValid = IsValid(NewClientRepresentativeRecord).Result;
         isCurrentValid = IsValid(CurrentClientRepresentativeRecord).Result;

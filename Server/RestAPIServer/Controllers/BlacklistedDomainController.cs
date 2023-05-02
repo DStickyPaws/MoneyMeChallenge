@@ -25,14 +25,14 @@ public class BlacklistedDomainController : ControllerBase
     {
         IEnumerable<IBlacklistedDomain> Result;
 
-        Result = Engines.BlacklistedDomains;
+        Result = Engines.GetAllBlacklistedDomains().Result;
 
         return Task.FromResult(Result);
     }
 
     [HttpPost]
     [Route("IsValid")]
-    public Task<bool> IsValid([FromBody] BlacklistedDomain blacklistedDomain)
+    public Task<bool> IsValid([FromBody] IBlacklistedDomain blacklistedDomain)
     {
         bool Result;
 
@@ -43,7 +43,7 @@ public class BlacklistedDomainController : ControllerBase
 
     [HttpPost]
     [Route("BlacklistDomain")]
-    public Task<IActionResult> BlaclistDomain([FromBody] BlacklistedDomain blacklistedDomain)
+    public Task<IActionResult> BlaclistDomain([FromBody] IBlacklistedDomain blacklistedDomain)
     {
         IActionResult Result;
         bool InitialResult;
@@ -58,7 +58,7 @@ public class BlacklistedDomainController : ControllerBase
 
     [HttpPost]
     [Route("IsBlacklisted")]
-    public Task<bool> IsBlacklisted([FromBody] BlacklistedDomain blacklistedDomain)
+    public Task<bool> IsBlacklisted([FromBody] IBlacklistedDomain blacklistedDomain)
     {
         bool Result;
 
@@ -69,7 +69,7 @@ public class BlacklistedDomainController : ControllerBase
 
     [HttpDelete]
     [Route("RemoveFromBlacklist")]
-    public Task<IActionResult> RemoveFromBlacklist([FromBody] BlacklistedDomain blacklistedDomain)
+    public Task<IActionResult> RemoveFromBlacklist([FromBody] IBlacklistedDomain blacklistedDomain)
     {
         IActionResult Result;
         bool InitialResult;
@@ -85,17 +85,13 @@ public class BlacklistedDomainController : ControllerBase
     [HttpDelete]
     [Route("RemoveFromBlacklistById")]
     public Task<IActionResult> RemoveFromBlacklist(long Id)
-    {        
-        bool SecondaryResult, IsExisting;
+    {
+        bool isSuccessful;
         IActionResult Result;
-        IBlacklistedDomain InitialResult;
 
-        InitialResult = Engines.Find(Id).Result;
-        IsExisting = InitialResult.id != null;
-        if (IsExisting) SecondaryResult = Engines.Delete(InitialResult).Result;
-        else SecondaryResult = false;
+        isSuccessful = Engines.Delete(Id).Result;
 
-        if (SecondaryResult) Result = Ok("Sucessful in removing the blacklist");
+        if (isSuccessful) Result = Ok("Sucessful in removing the blacklist");
         else Result = StatusCode(500, "Something went wrong when removing the blacklist");
 
         return Task.FromResult(Result);

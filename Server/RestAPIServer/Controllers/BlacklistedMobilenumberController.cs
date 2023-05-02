@@ -2,6 +2,8 @@
 using RestAPIServer.Engines;
 using RestAPIServer.Interface;
 using RestAPIServer.Models;
+using System.Data.SQLite;
+using System.Data;
 
 namespace RestAPIServer.Controllers;
 
@@ -12,6 +14,7 @@ public class BlacklistedMobilenumberController : ControllerBase
     private IConfiguration Configuration { get; set; }
     private BlacklistedMobileNumberEngine Engine { get; set; }
 
+
     public BlacklistedMobilenumberController(IConfiguration Configuration)
     {
         this.Configuration = Configuration;
@@ -20,11 +23,11 @@ public class BlacklistedMobilenumberController : ControllerBase
 
     [HttpGet]
     [Route("GetAllBlacklistedMobilenumbers")]
-    public Task<IEnumerable<IBlacklistMobilenumber>> GetAllBlacklistedMobilenumbers()
+    public Task<IEnumerable<IBlacklistMobileNumber>> GetAllBlacklistedMobilenumbers()
     {
-        IEnumerable<IBlacklistMobilenumber> Result;
+        IEnumerable<IBlacklistMobileNumber> Result;
 
-        Result = Engine.BlacklistedMobilenumbers;
+        Result = Engine.GetAllBlackListedMobileNumber().Result;
 
         return Task.FromResult(Result);
     }
@@ -34,8 +37,8 @@ public class BlacklistedMobilenumberController : ControllerBase
     public Task<bool> IsValid([FromBody] BlacklistedMobileNumber mobileNumber)
     {
         bool Result;
-
-        Result = Engine.ValidateMobileNumber((IBlacklistMobilenumber)mobileNumber).Result;
+        
+        Result = Engine.IsValid(mobileNumber).Result;
 
         return Task.FromResult(Result);
     }
@@ -68,24 +71,15 @@ public class BlacklistedMobilenumberController : ControllerBase
 
     [HttpPatch]
     [Route("UpdateMobileNumber")]
-    public Task<IActionResult> UpdateMobileNumber(long id, [FromBody]  BlacklistedMobileNumber newMobileNumber)
+    public Task<IActionResult> UpdateMobileNumber([FromQuery] long id, [FromBody]  BlacklistedMobileNumber newMobileNumber)
     {
-        bool SecondaryResult, TertiaryResult;
-        IActionResult Result;
-        IBlacklistMobilenumber InitialResult;
-        long IdPlaceHolder;
+        bool isSuccessful;
+        IActionResult Result;        
 
-        InitialResult = Engine.Find(id).Result;
-        SecondaryResult = InitialResult.id != null ? true : false;
-        if (SecondaryResult)
-        {
-            IdPlaceHolder = InitialResult.id ?? 0;
-            TertiaryResult = Engine.Update(BlacklistedMobileNumber.Create(IdPlaceHolder, newMobileNumber.mobilenumber).Result).Result;
-            if (TertiaryResult) Result = Ok("Successful Update.");
-            else Result = StatusCode(500, "Something went wrong during update");
-        }
-        else Result = StatusCode(409, "The number you have submitted to update does not exist");
-        
+        isSuccessful = Engine.Update(id, newMobileNumber.MobileNumber).Result;
+
+        if (isSuccessful) Result = Ok("Successful Update");
+        else Result = StatusCode(500, "Something went wrong during update");
 
         return Task.FromResult(Result);
     }
@@ -94,18 +88,13 @@ public class BlacklistedMobilenumberController : ControllerBase
     [Route("RemoveFromBlacklist")]
     public Task<IActionResult> RemoveMobileNumberFromBlacklist([FromBody] BlacklistedMobileNumber mobileNumber)
     {
-        bool InitialResult, SecondaryResult;
+        bool isSuccessful;
         IActionResult Result;
 
-        InitialResult = Engine.IsBlacklisted(mobileNumber).Result;
+        isSuccessful = Engine.Delete(mobileNumber).Result;
 
-        if (InitialResult)
-        {
-            SecondaryResult = Engine.Delete(mobileNumber).Result;
-            if (SecondaryResult) Result = Ok("Sucessful Deletion.");
-            else Result = StatusCode(500, "Something went wrong during deletion.");
-        }
-        else Result = StatusCode(409, "The number you have submitted to blacklist does not exist, and conflicts with the current serve state.");
+        if (isSuccessful) Result = Ok("Successful Removal from Blacklist");
+        else Result = StatusCode(500, "Something went wrong during removal from blacklist");
 
         return Task.FromResult(Result);
     }
@@ -114,20 +103,12 @@ public class BlacklistedMobilenumberController : ControllerBase
     [Route("RemoveFromBlacklistById")]
     public Task<IActionResult> RemoveMobileNumberFromBlacklist(long id)
     {
-        bool SecondaryResult;
-        IBlacklistMobilenumber InitialResult;
+        bool isSuccessful;
         IActionResult Result;
 
-        InitialResult = Engine.Find(id).Result;
-        SecondaryResult = Engine.IsBlacklisted(InitialResult).Result;
-
-        if (SecondaryResult)
-        {
-            SecondaryResult = Engine.Delete(InitialResult).Result;
-            if (SecondaryResult) Result = Ok("Sucessful Deletion.");
-            else Result = StatusCode(500, "Something went wrong during deletion.");
-        }
-        else Result = StatusCode(409, "The number you have submitted to blacklist does not exist, and conflicts with the current serve state.");
+        isSuccessful = Engine.Delete(id).Result;
+        if (isSuccessful) Result = Ok("Successful Removal from Blacklist");
+        else Result = StatusCode(500, "Something went wrong during removal from blacklist");
 
         return Task.FromResult(Result);
     }
